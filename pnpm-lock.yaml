@@ -37,6 +37,12 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.0.0
     version: 6.14.0(eslint@8.55.0)(typescript@5.3.3)
+  '@zerodevx/svelte-toast':
+    specifier: ^0.9.5
+    version: 0.9.5(svelte@4.2.8)
+  carbon-components-svelte:
+    specifier: ^0.82.0
+    version: 0.82.4
   eslint:
     specifier: ^8.28.0
     version: 8.55.0
@@ -52,12 +58,15 @@ devDependencies:
   prettier-plugin-svelte:
     specifier: ^3.1.2
     version: 3.1.2(prettier@3.1.1)(svelte@4.2.8)
+  sass:
+    specifier: ^1.69.5
+    version: 1.69.5
   svelte:
     specifier: ^4.2.7
     version: 4.2.8
   svelte-check:
     specifier: ^3.6.0
-    version: 3.6.2(postcss@8.4.32)(svelte@4.2.8)
+    version: 3.6.2(postcss@8.4.32)(sass@1.69.5)(svelte@4.2.8)
   tslib:
     specifier: ^2.4.1
     version: 2.6.2
@@ -66,7 +75,7 @@ devDependencies:
     version: 5.3.3
   vite:
     specifier: ^4.4.2
-    version: 4.5.1
+    version: 4.5.1(sass@1.69.5)
 
 packages:
 
@@ -446,7 +455,7 @@ packages:
       svelte: 4.2.8
       tiny-glob: 0.2.9
       undici: 5.26.5
-      vite: 4.5.1
+      vite: 4.5.1(sass@1.69.5)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -462,7 +471,7 @@ packages:
       '@sveltejs/vite-plugin-svelte': 2.5.3(svelte@4.2.8)(vite@4.5.1)
       debug: 4.3.4
       svelte: 4.2.8
-      vite: 4.5.1
+      vite: 4.5.1(sass@1.69.5)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -481,7 +490,7 @@ packages:
       magic-string: 0.30.5
       svelte: 4.2.8
       svelte-hmr: 0.15.3(svelte@4.2.8)
-      vite: 4.5.1
+      vite: 4.5.1(sass@1.69.5)
       vitefu: 0.2.5(vite@4.5.1)
     transitivePeerDependencies:
       - supports-color
@@ -758,6 +767,14 @@ packages:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==, tarball: https://registry.npmmirror.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz}
     dev: true
 
+  /@zerodevx/svelte-toast@0.9.5(svelte@4.2.8):
+    resolution: {integrity: sha512-JLeB/oRdJfT+dz9A5bgd3Z7TuQnBQbeUtXrGIrNWMGqWbabpepBF2KxtWVhL2qtxpRqhae2f6NAOzH7xs4jUSw==, tarball: https://registry.npmmirror.com/@zerodevx/svelte-toast/-/svelte-toast-0.9.5.tgz}
+    peerDependencies:
+      svelte: ^3.57.0 || ^4.0.0
+    dependencies:
+      svelte: 4.2.8
+    dev: true
+
   /acorn-jsx@5.3.2(acorn@8.11.2):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==, tarball: https://registry.npmmirror.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz}
     peerDependencies:
@@ -852,6 +869,12 @@ packages:
   /callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==, tarball: https://registry.npmmirror.com/callsites/-/callsites-3.1.0.tgz}
     engines: {node: '>=6'}
+    dev: true
+
+  /carbon-components-svelte@0.82.4:
+    resolution: {integrity: sha512-fuqMl+KNJXMlGhuwK4M11ZnGcbHF6nR7TOiiq6UJr5ALCCen4jk71sMAOurUWbOTOVe4DXM4z+Sb6/BV/Gf1Ag==, tarball: https://registry.npmmirror.com/carbon-components-svelte/-/carbon-components-svelte-0.82.4.tgz}
+    dependencies:
+      flatpickr: 4.6.9
     dev: true
 
   /chalk@4.1.2:
@@ -1228,6 +1251,10 @@ packages:
       rimraf: 3.0.2
     dev: true
 
+  /flatpickr@4.6.9:
+    resolution: {integrity: sha512-F0azNNi8foVWKSF+8X+ZJzz8r9sE1G4hl06RyceIaLvyltKvDl6vqk9Lm/6AUUCi5HWaIjiUbk7UpeE/fOXOpw==, tarball: https://registry.npmmirror.com/flatpickr/-/flatpickr-4.6.9.tgz}
+    dev: true
+
   /flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==, tarball: https://registry.npmmirror.com/flatted/-/flatted-3.2.9.tgz}
     dev: true
@@ -1312,6 +1339,10 @@ packages:
   /ignore@5.3.0:
     resolution: {integrity: sha512-g7dmpshy+gD7mh88OC9NwSGTKoc3kyLAZQRU1mt53Aw/vnvfXnbC+F/7F7QoYVKbV+KNvJx8wArewKy1vXMtlg==, tarball: https://registry.npmmirror.com/ignore/-/ignore-5.3.0.tgz}
     engines: {node: '>= 4'}
+    dev: true
+
+  /immutable@4.3.4:
+    resolution: {integrity: sha512-fsXeu4J4i6WNWSikpI88v/PcVflZz+6kMhUfIwc5SY+poQRPnaf5V7qds6SUyUN3cVxEzuCab7QIoLOQ+DQ1wA==, tarball: https://registry.npmmirror.com/immutable/-/immutable-4.3.4.tgz}
     dev: true
 
   /import-fresh@3.3.0:
@@ -1751,6 +1782,16 @@ packages:
       rimraf: 2.7.1
     dev: true
 
+  /sass@1.69.5:
+    resolution: {integrity: sha512-qg2+UCJibLr2LCVOt3OlPhr/dqVHWOa9XtZf2OjbLs/T4VPSJ00udtgJxH3neXZm+QqX8B+3cU7RaLqp1iVfcQ==, tarball: https://registry.npmmirror.com/sass/-/sass-1.69.5.tgz}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.5.3
+      immutable: 4.3.4
+      source-map-js: 1.0.2
+    dev: true
+
   /semver@7.5.4:
     resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==, tarball: https://registry.npmmirror.com/semver/-/semver-7.5.4.tgz}
     engines: {node: '>=10'}
@@ -1830,7 +1871,7 @@ packages:
       has-flag: 4.0.0
     dev: true
 
-  /svelte-check@3.6.2(postcss@8.4.32)(svelte@4.2.8):
+  /svelte-check@3.6.2(postcss@8.4.32)(sass@1.69.5)(svelte@4.2.8):
     resolution: {integrity: sha512-E6iFh4aUCGJLRz6QZXH3gcN/VFfkzwtruWSRmlKrLWQTiO6VzLsivR6q02WYLGNAGecV3EocqZuCDrC2uttZ0g==, tarball: https://registry.npmmirror.com/svelte-check/-/svelte-check-3.6.2.tgz}
     hasBin: true
     peerDependencies:
@@ -1843,7 +1884,7 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.2.8
-      svelte-preprocess: 5.1.2(postcss@8.4.32)(svelte@4.2.8)(typescript@5.3.3)
+      svelte-preprocess: 5.1.2(postcss@8.4.32)(sass@1.69.5)(svelte@4.2.8)(typescript@5.3.3)
       typescript: 5.3.3
     transitivePeerDependencies:
       - '@babel/core'
@@ -1883,7 +1924,7 @@ packages:
       svelte: 4.2.8
     dev: true
 
-  /svelte-preprocess@5.1.2(postcss@8.4.32)(svelte@4.2.8)(typescript@5.3.3):
+  /svelte-preprocess@5.1.2(postcss@8.4.32)(sass@1.69.5)(svelte@4.2.8)(typescript@5.3.3):
     resolution: {integrity: sha512-XF0aliMAcYnP4hLETvB6HRAMnaL09ASYT1Z2I1Gwu0nz6xbdg/dSgAEthtFZJA4AKrNhFDFdmUDO+H9d/6xg5g==, tarball: https://registry.npmmirror.com/svelte-preprocess/-/svelte-preprocess-5.1.2.tgz}
     engines: {node: '>= 14.10.0'}
     requiresBuild: true
@@ -1925,6 +1966,7 @@ packages:
       detect-indent: 6.1.0
       magic-string: 0.27.0
       postcss: 8.4.32
+      sass: 1.69.5
       sorcery: 0.11.0
       strip-indent: 3.0.0
       svelte: 4.2.8
@@ -2021,7 +2063,7 @@ packages:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==, tarball: https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz}
     dev: true
 
-  /vite@4.5.1:
+  /vite@4.5.1(sass@1.69.5):
     resolution: {integrity: sha512-AXXFaAJ8yebyqzoNB9fu2pHoo/nWX+xZlaRwoeYUxEqBO+Zj4msE5G+BhGBll9lYEKv9Hfks52PAF2X7qDYXQA==, tarball: https://registry.npmmirror.com/vite/-/vite-4.5.1.tgz}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -2052,6 +2094,7 @@ packages:
       esbuild: 0.18.20
       postcss: 8.4.32
       rollup: 3.29.4
+      sass: 1.69.5
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
@@ -2064,7 +2107,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.5.1
+      vite: 4.5.1(sass@1.69.5)
     dev: true
 
   /which@2.0.2:

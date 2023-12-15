@@ -1,6 +1,5 @@
-<script>
-	import Greet from '../lib/Greet.svelte'
-  </script>
-  
-  <h1>Welcome to SvelteKit</h1>
-  <Greet />
+<script lang="ts">
+	import App from '$lib/App.svelte';
+</script>
+
+<App />
