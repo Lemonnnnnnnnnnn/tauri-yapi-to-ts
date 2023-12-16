@@ -34,6 +34,8 @@ pub struct Request {
     pub request_template: Option<String>,
     pub header_template: Option<String>,
     pub request_full_path: Option<PathBuf>,
+    // My_$1 : dirname => My_dirname.ts
+    pub file_name_template: Option<String>,
 }
 
 impl Request {
@@ -47,6 +49,7 @@ impl Request {
             request_template: config_json.request_template,
             header_template: config_json.header_template,
             request_full_path: config_json.request_full_path,
+            file_name_template: config_json.file_name_template,
         }
     }
 
@@ -87,15 +90,8 @@ impl Request {
     }
 
     pub fn write_ts(&self, path: &PathBuf) {
-        let types_root_path = self.context.types_full_path.clone().unwrap();
-        let sub_path = match path == &types_root_path {
-            true => None,
-            false => Some(path.strip_prefix(&types_root_path).unwrap().to_path_buf()),
-        };
-
-        println!("sub_path: {:?}", sub_path);
-
-        let read_res = fs::read_dir(path).unwrap();
+        let sub_path = self.get_type_relative_path(path);
+        let write_path = self.get_write_path(&sub_path);
 
         let mut ts_string = match &self.header_template {
             Some(template) => format!("{}\n", template.clone()),
@@ -105,14 +101,7 @@ impl Request {
         let mut import_list: Vec<String> = vec![];
         let mut export_list: Vec<String> = vec![];
 
-        let write_path = match &sub_path {
-            Some(sub_path) => {
-                self.request_full_path.clone().unwrap().join(&sub_path)
-            },
-            None => self.request_full_path.clone().unwrap().join("index"),
-        };
-
-        for dirs in read_res.into_iter() {
+        for dirs in fs::read_dir(path).unwrap().into_iter() {
             let dir = dirs.unwrap();
             let file_type = dir.file_type().unwrap();
             let file_path = dir.path();
@@ -151,12 +140,40 @@ impl Request {
 
         let parent = write_path.parent().unwrap();
 
-        println!("{:#?}", write_path);
-
         fs::create_dir_all(parent).unwrap();
+
         fs::write(format!("{}.ts", write_path.to_str().unwrap()), ts_string).unwrap();
     }
 
+    // 获取 type 文件的相对路径
+    fn get_type_relative_path(&self, path: &PathBuf) -> Option<PathBuf> {
+        let types_root_path = self.context.types_full_path.clone().unwrap();
+        match path == &types_root_path {
+            true => None,
+            false => Some(path.strip_prefix(&types_root_path).unwrap().to_path_buf()),
+        }
+    }
+
+    // 获取写入 service 文件的路径
+    fn get_write_path(&self, sub_path: &Option<PathBuf>) -> PathBuf {
+        match &sub_path {
+            Some(sub_path) => {
+                let mut write_path = self.request_full_path.clone().unwrap().join(&sub_path);
+
+                if let Some(template) = self.file_name_template.clone() {
+                    if let Some(file_name) = write_path.file_name() {
+                        let real_file_name = template.replace("$1", file_name.to_str().unwrap());
+                        write_path.set_file_name(real_file_name);
+                    }
+                }
+
+                write_path
+            }
+            None => self.request_full_path.clone().unwrap().join("index"),
+        }
+    }
+
+    // 检查生成service的 type 文件是否有 Request/Response interface
     fn check_file(&self, file_path: &PathBuf, file_name_without_ext: &String) -> bool {
         let req = format!("{}Request", file_name_without_ext);
         let resp = format!("{}Response", file_name_without_ext);
