@@ -141,6 +141,7 @@ pub struct UpdateConfigRequest {
     pub request_template: Option<String>,
     pub header_template: Option<String>,
     pub request_path: Option<String>,
+    pub file_name_template: Option<String>
 }
 
 // 更新类型配置
@@ -191,6 +192,10 @@ pub async fn update_config(
 
     if let Some(header_template) = &form.header_template {
         config_json.header_template = Some(header_template.clone());
+    }
+
+    if let Some(file_name_template) = &form.file_name_template {
+        config_json.file_name_template = Some(file_name_template.clone());
     }
 
     if let Some(request_path) = &form.request_path {

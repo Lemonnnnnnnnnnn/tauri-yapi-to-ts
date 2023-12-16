@@ -9,6 +9,7 @@ export interface Config {
     request_path?: string,
     request_template?: string,
     header_template?: string
+    file_name_template?: string
 }
 
 
