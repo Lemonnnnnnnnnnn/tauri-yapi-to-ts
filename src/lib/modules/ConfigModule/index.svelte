@@ -21,7 +21,7 @@
 	let form = init_form;
 
 	onMount(() => {
-        // @ts-expect-error 
+		// @ts-expect-error
 		request('get_config', {}).then((res: SuccessResponse<Config>) => {
 			form = res.data;
 		});
@@ -62,7 +62,7 @@
 			return;
 		}
 
-        // @ts-expect-error 
+		// @ts-expect-error
 		request('update_config', form).then((res: SuccessResponse<Config>) => {
 			toast.push(res.message, toastTheme.success);
 		});
@@ -135,14 +135,12 @@
 	<Button type="primary" on:click={update_config}>提交</Button>
 </footer>
 
-<style lang="scss">
-	.config-module-footer {
-		:global(.bx--btn) {
-			width: 100%;
-			max-width: 100vw;
-			text-align: center;
-			display: block;
-            margin-top: 20px;
-		}
+<style>
+	.config-module-footer :global(.bx--btn) {
+		width: 100%;
+		max-width: 100vw;
+		text-align: center;
+		display: block;
+		margin-top: 20px;
 	}
 </style>

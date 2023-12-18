@@ -11,7 +11,7 @@
 	let form: Config = {
 		request_path: 'src/services',
 		request_template:
-			"export const $1 = (params: $2) => request<$3>('/api/$4' , { method: 'post' , data: params});",
+			"export const $1 = (params: $2) => request<$3>('/api$4' , { method: 'post' , data: params});",
 		header_template: "import { request } from 'umi';",
 		file_name_template: '$1'
 	};
