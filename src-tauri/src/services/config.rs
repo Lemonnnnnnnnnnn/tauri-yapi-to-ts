@@ -22,10 +22,7 @@ pub struct GetConfigRequest {
 
 // 读取配置(初始化)
 #[tauri::command]
-pub async fn read_config(
-    data: String,
-    handle: tauri::AppHandle,
-) -> Result<CustomResponse, String> {
+pub async fn read_config(data: String, handle: tauri::AppHandle) -> Result<CustomResponse, String> {
     let cx: State<'_, ContextGlobal> = handle.state();
     let params = from_str::<GetConfigRequest>(&data).unwrap();
     let queue: State<'_, Queue> = handle.state();
@@ -35,26 +32,28 @@ pub async fn read_config(
     // 更新queue基础配置
     init_queue(&queue, &config).await;
     // 更新context基础配置
-    cx.update(dir_path).await;
+    cx.update(dir_path.clone()).await;
 
     match config.read_config() {
-        Ok(data) => {
+        Ok(mut data) => {
             if data.base_url.is_some() {
+                // 更新配置文件 source_path
+                data.source_path = Some(dir_path.clone());
+                config.write_config(&data);
+
                 update_queue(&queue, &data).await;
                 return Ok(CustomResponse {
                     message: String::from("读取配置成功！"),
                     data: None,
                 });
-            } else {
-                return Err("数据为空！".to_string());
             }
+            return Err("数据为空！".to_string());
         }
         Err(e) => {
             return Err(e);
         }
     }
 }
-
 
 // 获取配置
 #[tauri::command]
@@ -140,9 +139,9 @@ pub struct UpdateConfigRequest {
     pub break_seconds: Option<u64>,
     pub request_template: Option<String>,
     pub header_template: Option<String>,
-    pub type_import_path:Option<String>,
+    pub type_import_path: Option<String>,
     pub request_path: Option<String>,
-    pub file_name_template: Option<String>
+    pub file_name_template: Option<String>,
 }
 
 // 更新类型配置

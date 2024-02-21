@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 
 	let init_form: Config = {
+		source_path: '',
 		base_url: '',
 		rate_limit: 0,
 		types_path: '',
@@ -16,7 +17,7 @@
 		request_template: '',
 		header_template: '',
 		file_name_template: '',
-		type_import_path: '',
+		type_import_path: ''
 	};
 
 	let form = init_form;
@@ -76,6 +77,12 @@
 </script>
 
 <main style="height:500px; overflow:auto">
+	<TextInput
+		value={form.source_path}
+		on:change={(e) => (form.source_path = String(e.detail))}
+		labelText="本地项目根路径"
+		placeholder="请输入本地项目根路径"
+	/>
 	<TextInput
 		value={form.base_url}
 		on:change={(e) => (form.base_url = String(e.detail))}

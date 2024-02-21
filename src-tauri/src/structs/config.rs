@@ -70,6 +70,7 @@ pub struct Config {
 impl Config {
     pub fn new(source_path: &PathBuf) -> Self {
         let config_path = source_path.clone().join(CONFIG_PATH);
+
         Self { config_path }
     }
 

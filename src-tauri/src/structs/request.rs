@@ -205,8 +205,6 @@ impl Request {
             file_name_string, file_name_string, types_path_pathbuf, sub_path_unix, file_name_string
         );
 
-        println!("{}", import_string);
-
         import_list.push(import_string);
     }
 
