@@ -36,6 +36,7 @@ pub struct Request {
     pub request_full_path: Option<PathBuf>,
     // My_$1 : dirname => My_dirname.ts
     pub file_name_template: Option<String>,
+    pub type_import_path: Option<String>,
 }
 
 impl Request {
@@ -50,6 +51,7 @@ impl Request {
             header_template: config_json.header_template,
             request_full_path: config_json.request_full_path,
             file_name_template: config_json.file_name_template,
+            type_import_path: config_json.type_import_path,
         }
     }
 
@@ -181,7 +183,7 @@ impl Request {
         if is_string_in_file(&file_path, &req) && is_string_in_file(&file_path, &resp) {
             return true;
         }
-        return false;
+        false
     }
 
     // 把import ts 定义字符串添加进import_list
@@ -193,16 +195,17 @@ impl Request {
     ) {
         let sub_path_unix = Self::get_sub_path_unix(sub_path);
 
-        let types_path_pathbuf = self.context.types_path.clone().unwrap();
+        let types_path_pathbuf = match self.type_import_path.clone() {
+            Some(data) => data,
+            None => String::from("@/src/types"),
+        };
 
         let import_string = format!(
-            "import {{ {}Request , {}Response }} from \"@/{}{}/{}\"\n",
-            file_name_string,
-            file_name_string,
-            types_path_pathbuf.to_str().unwrap(),
-            sub_path_unix,
-            file_name_string
+            "import {{ {}Request , {}Response }} from \"{}{}/{}\"\n",
+            file_name_string, file_name_string, types_path_pathbuf, sub_path_unix, file_name_string
         );
+
+        println!("{}", import_string);
 
         import_list.push(import_string);
     }

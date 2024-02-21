@@ -15,7 +15,8 @@
 		request_path: '',
 		request_template: '',
 		header_template: '',
-		file_name_template: ''
+		file_name_template: '',
+		type_import_path: '',
 	};
 
 	let form = init_form;
@@ -59,6 +60,11 @@
 		}
 		if (!form.file_name_template) {
 			toast.push('请输入文件名模板字符串', toastTheme.error);
+			return;
+		}
+
+		if (!form.type_import_path) {
+			toast.push('请输入类型路径别名', toastTheme.error);
 			return;
 		}
 
@@ -120,6 +126,12 @@
 		on:change={(e) => (form.header_template = String(e.detail))}
 		labelText="请求文件首部字符串"
 		placeholder="请输入请求文件首部字符串"
+	/>
+	<TextInput
+		value={form.type_import_path}
+		on:change={(e) => (form.type_import_path = String(e.detail))}
+		labelText="类型路径别名字符串"
+		placeholder="请输入类型路径别名字符串"
 	/>
 	<TextInput
 		value={form.file_name_template}

@@ -13,6 +13,7 @@
 		request_template:
 			"export const $1 = (params: $2) => request<$3>('/api$4' , { method: 'post' , data: params});",
 		header_template: "import { request } from 'umi';",
+		type_import_path: '@/types',
 		file_name_template: '$1'
 	};
 
@@ -27,6 +28,10 @@
 		}
 		if (!form.header_template) {
 			toast.push('请输入请求文件首部字符串', toastTheme.error);
+			return;
+		}
+		if (!form.type_import_path) {
+			toast.push('请输入类型路径别名', toastTheme.error);
 			return;
 		}
 		if (!form.file_name_template) {
@@ -81,6 +86,12 @@
 		on:change={(e) => (form.header_template = String(e.detail))}
 		labelText="请求文件首部字符串"
 		placeholder="请输入请求文件首部字符串"
+	/>
+	<TextInput
+		value={form.type_import_path}
+		on:change={(e) => (form.type_import_path = String(e.detail))}
+		labelText="类型路径别名字符串"
+		placeholder="请输入类型路径别名字符串"
 	/>
 	<TextInput
 		value={form.file_name_template}

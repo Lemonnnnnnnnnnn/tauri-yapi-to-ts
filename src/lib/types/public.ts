@@ -10,6 +10,7 @@ export interface Config {
     request_template?: string,
     header_template?: string
     file_name_template?: string
+    type_import_path?: string
 }
 
 
