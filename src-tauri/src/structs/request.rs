@@ -1,6 +1,6 @@
 use std::{
     fs::{self, File},
-    io::{BufRead, BufReader},
+    io::{BufRead, BufReader, Write},
     path::{Path, PathBuf},
 };
 
@@ -36,6 +36,14 @@ pub struct Request {
     pub request_full_path: Option<PathBuf>,
     // My_$1 : dirname => My_dirname.ts
     pub file_name_template: Option<String>,
+        /**
+     * example:
+     * import { addRequest , addResponse } from "@/types/agentAppAccount/add"
+     *
+     * request_template:
+     * import { $1 , $2 } from "$3"
+     */
+    pub type_import_template: Option<String>,
 }
 
 impl Request {
@@ -50,6 +58,7 @@ impl Request {
             header_template: config_json.header_template,
             request_full_path: config_json.request_full_path,
             file_name_template: config_json.file_name_template,
+            type_import_template: config_json.type_import_template,
         }
     }
 
@@ -142,7 +151,9 @@ impl Request {
 
         fs::create_dir_all(parent).unwrap();
 
-        fs::write(format!("{}.ts", write_path.to_str().unwrap()), ts_string).unwrap();
+        let mut file = fs::File::create(format!("{}.ts", write_path.to_str().unwrap())).unwrap();
+
+        file.write_all(ts_string.as_bytes()).unwrap()
     }
 
     // 获取 type 文件的相对路径
@@ -181,7 +192,7 @@ impl Request {
         if is_string_in_file(&file_path, &req) && is_string_in_file(&file_path, &resp) {
             return true;
         }
-        return false;
+        false
     }
 
     // 把import ts 定义字符串添加进import_list
@@ -193,16 +204,14 @@ impl Request {
     ) {
         let sub_path_unix = Self::get_sub_path_unix(sub_path);
 
-        let types_path_pathbuf = self.context.types_path.clone().unwrap();
-
-        let import_string = format!(
-            "import {{ {}Request , {}Response }} from \"@/{}{}/{}\"\n",
-            file_name_string,
-            file_name_string,
-            types_path_pathbuf.to_str().unwrap(),
-            sub_path_unix,
-            file_name_string
-        );
+        let import_string = self
+            .type_import_template
+            .clone()
+            .unwrap()
+            .replace("$1", &format!("{}Request", &file_name_string))
+            .replace("$2", &format!("{}Response", &file_name_string))
+            .replace("$3", &format!("{}/{}", sub_path_unix, file_name_string))
+            + "\n";
 
         import_list.push(import_string);
     }

@@ -21,6 +21,7 @@ pub async fn check_request_config(handle: tauri::AppHandle) -> Result<CustomResp
     if request.request_full_path.is_none()
         || request.header_template.is_none()
         || request.request_template.is_none()
+        || request.type_import_template.is_none()
     {
         return Err("请初始化数据".to_string());
     }

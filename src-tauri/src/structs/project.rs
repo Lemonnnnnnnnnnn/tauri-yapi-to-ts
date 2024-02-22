@@ -7,8 +7,6 @@ use super::{
 };
 type Response = CommonResponse<Vec<CategoryMenuItem>>;
 
-pub const TEMP_TOKEN: &str = "537cbd7121981b7de4010957bc8b042461ccd948e338bcad309031102027c633";
-
 #[derive(Debug)]
 pub struct Project {
     pub id: String,

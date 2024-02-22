@@ -38,7 +38,8 @@ pub struct ConfigJson {
     pub request_full_path: Option<PathBuf>,
     pub request_template: Option<String>,
     pub header_template: Option<String>,
-    pub file_name_template : Option<String>
+    pub file_name_template : Option<String>,
+    pub type_import_template : Option<String>
 }
 
 impl ConfigJson {
@@ -55,7 +56,8 @@ impl ConfigJson {
             request_full_path:None,
             request_template: None,
             header_template: None,
-            file_name_template: None
+            file_name_template: None,
+            type_import_template: None
         }
     }
 }
@@ -68,6 +70,7 @@ pub struct Config {
 impl Config {
     pub fn new(source_path: &PathBuf) -> Self {
         let config_path = source_path.clone().join(CONFIG_PATH);
+
         Self { config_path }
     }
 
