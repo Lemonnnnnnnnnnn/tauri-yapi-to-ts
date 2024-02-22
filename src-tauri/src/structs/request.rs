@@ -204,11 +204,6 @@ impl Request {
     ) {
         let sub_path_unix = Self::get_sub_path_unix(sub_path);
 
-        // let types_path_pathbuf = match self.type_import_template.clone() {
-        //     Some(data) => data,
-        //     None => String::from("@/src/types"),
-        // };
-
         let import_string = self
             .type_import_template
             .clone()
@@ -217,11 +212,6 @@ impl Request {
             .replace("$2", &format!("{}Response", &file_name_string))
             .replace("$3", &format!("{}/{}", sub_path_unix, file_name_string))
             + "\n";
-
-        // let import_string = format!(
-        //     "import {{ {}Request , {}Response }} from \"{}{}/{}\"\n",
-        //     file_name_string, file_name_string, types_path_pathbuf, sub_path_unix, file_name_string
-        // );
 
         import_list.push(import_string);
     }
