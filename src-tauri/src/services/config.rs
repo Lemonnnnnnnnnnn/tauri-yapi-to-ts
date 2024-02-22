@@ -139,7 +139,7 @@ pub struct UpdateConfigRequest {
     pub break_seconds: Option<u64>,
     pub request_template: Option<String>,
     pub header_template: Option<String>,
-    pub type_import_path: Option<String>,
+    pub type_import_template: Option<String>,
     pub request_path: Option<String>,
     pub file_name_template: Option<String>,
 }
@@ -194,8 +194,8 @@ pub async fn update_config(
         config_json.header_template = Some(header_template.clone());
     }
 
-    if let Some(type_import_path) = &form.type_import_path {
-        config_json.type_import_path = Some(type_import_path.clone());
+    if let Some(type_import_template) = &form.type_import_template {
+        config_json.type_import_template = Some(type_import_template.clone());
     }
 
     if let Some(file_name_template) = &form.file_name_template {

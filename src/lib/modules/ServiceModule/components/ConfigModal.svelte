@@ -13,7 +13,7 @@
 		request_template:
 			"export const $1 = (params: $2) => request<$3>('/api$4' , { method: 'post' , data: params});",
 		header_template: "import { request } from 'umi';",
-		type_import_path: '@/types',
+		type_import_template: 'import { type $1 , type $2 } from "@/types/$3"',
 		file_name_template: '$1'
 	};
 
@@ -30,8 +30,8 @@
 			toast.push('请输入请求文件首部字符串', toastTheme.error);
 			return;
 		}
-		if (!form.type_import_path) {
-			toast.push('请输入类型路径别名', toastTheme.error);
+		if (!form.type_import_template) {
+			toast.push('请输入import类型模板', toastTheme.error);
 			return;
 		}
 		if (!form.file_name_template) {
@@ -81,17 +81,23 @@
 		<p>$3: 返回类型</p>
 		<p>$4: 接口地址</p>
 	</Tooltip>
+
+	<TextInput
+		value={form.type_import_template}
+		on:change={(e) => (form.type_import_template = String(e.detail))}
+		labelText="import类型模板"
+		placeholder="请输入import类型模板"
+	/>
+	<Tooltip align="start" direction="top">
+		<p>$1: Request Type 类型</p>
+		<p>$2: Response Type 类型</p>
+		<p>$3: 类型文件相对地址（请在前面添加类型文件夹别名）</p>
+	</Tooltip>
 	<TextInput
 		value={form.header_template}
 		on:change={(e) => (form.header_template = String(e.detail))}
 		labelText="请求文件首部字符串"
 		placeholder="请输入请求文件首部字符串"
-	/>
-	<TextInput
-		value={form.type_import_path}
-		on:change={(e) => (form.type_import_path = String(e.detail))}
-		labelText="类型路径别名字符串"
-		placeholder="请输入类型路径别名字符串"
 	/>
 	<TextInput
 		value={form.file_name_template}
