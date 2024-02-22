@@ -40,7 +40,7 @@ pub struct Request {
      * example:
      * import { addRequest , addResponse } from "@/types/agentAppAccount/add"
      *
-     * request_template:
+     * type_import_template:
      * import { $1 , $2 } from "$3"
      */
     pub type_import_template: Option<String>,
@@ -237,7 +237,7 @@ impl Request {
             .replace("$3", &format!("{}Response", &file_name_string))
             .replace(
                 "$4",
-                &format!("{}{}", sub_path_unix.as_str(), &file_name_string),
+                &format!("{}/{}", sub_path_unix.as_str(), &file_name_string),
             )
             + "\n";
 
