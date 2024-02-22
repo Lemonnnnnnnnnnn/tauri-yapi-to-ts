@@ -61,7 +61,7 @@
 	}
 </script>
 
-<main>
+<main style="overflow:auto">
 	<div class="flex justify-between items-center">
 		<div class="header">对应的接口树：</div>
 		<Button kind="tertiary" on:click={update_service}>更新所有请求</Button>
@@ -70,7 +70,7 @@
 		<Search bind:value={searchKey} />
 		<Button kind="secondary" on:click={get_data}>搜索</Button>
 	</div>
-
+	
 	{#each list as item}
 		<Node {...item} expanded={true} />
 	{/each}
