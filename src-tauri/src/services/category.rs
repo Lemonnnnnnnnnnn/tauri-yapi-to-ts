@@ -105,19 +105,12 @@ fn filter_new_interfaces(
     let config_json = config.read_config().unwrap();
 
     let mut config_interfaces = vec![];
-    let mut find_config_interfaces = false;
 
-    for project in config_json.project_list {
-        if find_config_interfaces == true {
-            break;
-        }
+    'project: for project in config_json.project_list {
         for category in project.categories {
-            if find_config_interfaces == true {
-                break;
-            }
             if category.id == category_id {
                 config_interfaces = category.interfaces;
-                find_config_interfaces = true;
+                break 'project;
             }
         }
     }
