@@ -149,19 +149,10 @@ fn merge_projects(new_project: &ProjectShort, old_config: &mut ConfigJson) {
 
 fn merge_categories(new_project: &ProjectShort, old_project: &mut ProjectShort) {
     for category in &new_project.categories {
-        let mut find = false;
-        for old_category in &old_project.categories {
-            if find == true {
-                break;
-            }
-            if old_category.id == category.id {
-                find = true;
-            }
+        if old_project.categories.iter().any(|oc| oc.id == category.id) {
+            continue;
         }
-
-        if find == false {
-            old_project.categories.push(category.clone());
-        }
+        old_project.categories.push(category.clone());
     }
 }
 
