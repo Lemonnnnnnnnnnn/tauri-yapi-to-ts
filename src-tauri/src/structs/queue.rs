@@ -224,38 +224,25 @@ impl Queue {
                     Ok(mut config_json) => {
                         for ri in result_queue {
                             let insert_node_id = &ri.category_id;
-                            let mut find = false;
 
-                            for project in &mut config_json.project_list {
-                                if find {
-                                    break;
-                                }
-
+                            'project: for project in &mut config_json.project_list {
                                 for category in &mut project.categories {
-                                    if find {
-                                        break;
-                                    }
-
                                     if category.id.as_str() == insert_node_id.as_str() {
                                         for interface in &mut category.interfaces {
                                             if interface.id == ri.id {
                                                 interface.name = Some(ri.title.clone());
                                                 interface.path = Some(ri.path.clone());
-
-                                                find = true;
-                                                break;
+                                                break 'project;
                                             }
                                         }
 
-                                        if !find {
-                                            category.interfaces.push(InterfaceShort {
-                                                id: ri.id.clone(),
-                                                name: Some(ri.title.clone()),
-                                                path: Some(ri.path.clone())
-                                            });
-                                        }
+                                        category.interfaces.push(InterfaceShort {
+                                            id: ri.id.clone(),
+                                            name: Some(ri.title.clone()),
+                                            path: Some(ri.path.clone()),
+                                        });
 
-                                        find = true;
+                                        break 'project;
                                     }
                                 }
                             }

@@ -8,6 +8,7 @@
 	import { Button, Search } from 'carbon-components-svelte';
 	import { confirm } from '@tauri-apps/api/dialog';
 
+	let full_list: TypesTree[] = [];
 	let list: TypesTree[] = [];
 	let searchKey = '';
 
@@ -16,15 +17,43 @@
 	});
 
 	function get_data() {
-		request('get_request_list', { key: searchKey })
+		request('get_request_list', { key: "" })
 			// @ts-expect-error
 			.then((res: SuccessResponse<TypesTree[]>) => {
+				full_list = sort(res.data);
 				list = sort(res.data);
 				toast.push(JSON.stringify(res.message), toastTheme.success);
 			})
 			.catch((e) => {
 				toast.push(JSON.stringify(e), toastTheme.error);
 			});
+	}
+
+	function filter_data() {
+		if (searchKey === '') {
+			list = full_list;
+			return;
+		}
+
+		list = do_filter(full_list);
+
+		function do_filter(list: TypesTree[]) {
+			return list.filter((item) => {
+				if (item.name.includes(searchKey)) {
+					return true;
+				} else {
+					if (item.children.length) {
+						item.children = do_filter(item.children);
+
+						if (item.children.length) {
+							return true;
+						}
+					}
+
+					return false;
+				}
+			});
+		}
 	}
 
 	async function update_service() {
@@ -61,14 +90,14 @@
 	}
 </script>
 
-<main>
+<main style="overflow:auto">
 	<div class="flex justify-between items-center">
 		<div class="header">对应的接口树：</div>
 		<Button kind="tertiary" on:click={update_service}>更新所有请求</Button>
 	</div>
 	<div class="flex items-center" style="margin-top:10px;margin-bottom:10px">
 		<Search bind:value={searchKey} />
-		<Button kind="secondary" on:click={get_data}>搜索</Button>
+		<Button kind="secondary" on:click={filter_data}>搜索</Button>
 	</div>
 
 	{#each list as item}

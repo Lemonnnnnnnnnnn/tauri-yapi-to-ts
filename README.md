@@ -78,3 +78,10 @@ export const resetPassword = (params: resetPasswordRequest) => request<resetPass
 <p>$2: 请求类型</p>
 <p>$3: 返回类型</p>
 <p>$4: 接口地址</p>
+
+## 开发
+
+```
+pnpm i
+pnpm tauri dev
+```
