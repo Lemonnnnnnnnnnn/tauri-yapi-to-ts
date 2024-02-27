@@ -140,6 +140,7 @@ pub struct UpdateConfigRequest {
     pub request_template: Option<String>,
     pub header_template: Option<String>,
     pub type_import_template: Option<String>,
+    pub proxy: Option<String>,
     pub request_path: Option<String>,
     pub file_name_template: Option<String>,
 }
@@ -208,6 +209,10 @@ pub async fn update_config(
             &config_json.source_path.clone().unwrap(),
             request_path.clone(),
         ));
+    }
+
+    if let Some(proxy) = &form.proxy {
+        config_json.proxy = Some(proxy.clone());
     }
 
     update_queue(&queue, &config_json).await;

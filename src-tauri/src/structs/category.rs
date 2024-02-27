@@ -72,7 +72,21 @@ impl Category {
             self.token.clone(),
             self.id
         );
-        let client = reqwest::Client::new();
+
+        let proxy = if let Some(proxy) = self.context.proxy.clone() {
+            if !proxy.is_empty() {
+                Some(reqwest::Proxy::all(proxy).unwrap())
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+        let client = if let Some(proxy) = proxy.clone() {
+            reqwest::Client::builder().proxy(proxy).build().unwrap()
+        } else {
+            reqwest::Client::new()
+        };
 
         let res = client
             .get(api_url.clone())
