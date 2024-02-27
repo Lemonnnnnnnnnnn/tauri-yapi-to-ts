@@ -25,6 +25,7 @@ pub struct Context {
     pub break_seconds: Option<u64>,
     pub types_path: Option<PathBuf>,
     pub types_full_path: Option<PathBuf>,
+    pub proxy: Option<String>
 }
 
 impl Context {
@@ -43,6 +44,7 @@ impl Context {
             break_seconds: json.break_seconds.clone(),
             types_path: json.types_path.clone(),
             types_full_path: json.types_full_path.clone(),
+            proxy: json.proxy.clone(),
         }
     }
     

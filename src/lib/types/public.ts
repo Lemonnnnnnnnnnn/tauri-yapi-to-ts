@@ -11,6 +11,7 @@ export interface Config {
     header_template?: string
     file_name_template?: string
     type_import_template?: string
+    proxy?:string
 }
 
 

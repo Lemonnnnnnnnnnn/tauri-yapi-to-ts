@@ -17,7 +17,8 @@
 		request_template: '',
 		header_template: '',
 		file_name_template: '',
-		type_import_template: ''
+		type_import_template: '',
+		proxy:''
 	};
 
 	let form = init_form;
@@ -155,6 +156,12 @@
 	<Tooltip align="start" direction="top">
 		<p>$1: 文件名</p>
 	</Tooltip>
+	<TextInput
+		value={form.proxy}
+		on:change={(e) => (form.proxy = String(e.detail))}
+		labelText="代理地址"
+		placeholder="请输入代理地址"
+	/>
 </main>
 <footer class="config-module-footer">
 	<Button type="primary" on:click={update_config}>提交</Button>
