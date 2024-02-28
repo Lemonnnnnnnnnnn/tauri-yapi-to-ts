@@ -31,16 +31,17 @@ impl Atom {
 
     fn format_type(value: &String) -> String {
         if value.as_str() == "integer" {
-            return "number".to_string();
+            "number".to_string()
         } else {
-            return value.to_string();
+            value.to_string()
         }
     }
 }
 
 impl ToTs for Atom {
     fn to_ts(&self) -> String {
-        let required_symbol = if self.required { "?" } else { "" };
+        
+        let required_symbol = if self.required { "" } else { "?" };
         format!(
             "    // {}\n    {}{}: {}\n",
             self.description.replace("\n", ""),
@@ -110,7 +111,7 @@ impl ObjectLike {
 
 impl ToTs for ObjectLike {
     fn to_ts(&self) -> String {
-        let required_symbol = if self.required { "?" } else { "" };
+        let required_symbol = if self.required { "" } else { "?" };
         let object_name = self.get_ts_name();
         let array_symbol = if self.object_type == ObjectType::Array {
             "[]"

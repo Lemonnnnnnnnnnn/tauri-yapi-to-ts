@@ -4,7 +4,7 @@ use super::{
     entities::{Atom, Node, ObjectLike},
     enums::{JsonType, JsonValue, ObjectType, WebType},
     root::Root,
-    utils::{ get_json, get_legal_name, get_desc},
+    utils::{get_desc, get_json, get_legal_name},
 };
 
 #[derive(Debug)]
@@ -26,7 +26,7 @@ impl JsonResolver {
         Self {
             interface_name: Self::get_name(&interface_name),
             interface_desc,
-            json_value :get_json(json_string),
+            json_value: get_json(json_string),
             root: None,
             web_type,
         }
@@ -108,8 +108,8 @@ impl JsonResolver {
                         };
 
                         JsonValue::ObjectLike(array)
-                    },
-                    _ => JsonValue::Null
+                    }
+                    _ => JsonValue::Null,
                 }
             })
             .collect();
@@ -136,7 +136,7 @@ impl JsonResolver {
                         let required = Self::is_required(key, required_list);
                         let raw_type = Self::get_ts_type(value);
                         let key = Self::get_name(&key);
-                        let description = get_desc(value , "description");
+                        let description = get_desc(value, "description");
 
                         let value = match node_type {
                             JsonType::Object => {
@@ -170,17 +170,17 @@ impl JsonResolver {
                                     description: description.clone(),
                                 };
                                 JsonValue::Atom(atom)
-                            },
-                            _ => JsonValue::Null
+                            }
+                            _ => JsonValue::Null,
                         };
 
-                        return Node::new(
+                        Node::new(
                             self.interface_name.clone(),
                             key.clone(),
                             value,
                             required,
                             description.clone(),
-                        );
+                        )
                     })
                     .collect();
 
@@ -203,10 +203,11 @@ impl JsonResolver {
     fn is_required(key: &String, list: Option<&Value>) -> bool {
         if let Some(required_list) = list {
             let required_key_list = required_list.as_array().unwrap();
-            if required_key_list.iter().any(|x| x.to_string() != *key) {
-                return false;
+
+            if required_key_list.iter().any(|x| x.to_string() == format!("\"{}\"", *key)) {
+                return true;
             }
-            true
+            false
         } else {
             false
         }
@@ -217,11 +218,11 @@ impl JsonResolver {
             Some(type_value) => match type_value.as_str() {
                 Some(type_string) => {
                     if type_string == "object" {
-                        return JsonType::Object;
+                        JsonType::Object
                     } else if type_string == "array" {
-                        return JsonType::Array;
+                        JsonType::Array
                     } else {
-                        return JsonType::Atom;
+                        JsonType::Atom
                     }
                 }
                 None => JsonType::Unknown,
@@ -232,27 +233,21 @@ impl JsonResolver {
 
     fn get_ts_type(value: &Value) -> String {
         match value.get("type") {
-            Some(type_value) => {
-                match type_value.as_str() {
-                    Some(type_value_str) => {
-                        type_value_str.to_string()
-                    },
-                    None => String::from("any")
-                }
+            Some(type_value) => match type_value.as_str() {
+                Some(type_value_str) => type_value_str.to_string(),
+                None => String::from("any"),
             },
-            None => String::from("any")
+            None => String::from("any"),
         }
     }
 
-    fn get_name(raw_name : &str) -> String {
+    fn get_name(raw_name: &str) -> String {
         if raw_name.is_empty() {
-            return String::from("unknownName")
-        }else {
-            return get_legal_name(raw_name)
+            String::from("unknownName")
+        } else {
+            get_legal_name(raw_name)
         }
     }
-
-
 }
 
 // #[cfg(test)]
