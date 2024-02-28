@@ -3,7 +3,11 @@
 	import type { Config, SuccessResponse } from '@/types/public';
 	import { request } from '@/utils';
 	import { toast } from '@zerodevx/svelte-toast';
-	import { Button, TextInput, Tooltip } from 'carbon-components-svelte';
+	import Tooltip, { Wrapper } from '@smui/tooltip';
+	import Textfield from '@smui/textfield';
+	import Button from '@smui/button';
+	
+
 	import { onMount } from 'svelte';
 
 	let init_form: Config = {
@@ -18,7 +22,7 @@
 		header_template: '',
 		file_name_template: '',
 		type_import_template: '',
-		proxy:''
+		proxy: ''
 	};
 
 	let form = init_form;
@@ -77,94 +81,73 @@
 	}
 </script>
 
-<main style="height:500px; overflow:auto">
-	<TextInput
-		value={form.source_path}
-		on:change={(e) => (form.source_path = String(e.detail))}
-		labelText="本地项目根路径"
-		placeholder="请输入本地项目根路径"
-	/>
-	<TextInput
-		value={form.base_url}
-		on:change={(e) => (form.base_url = String(e.detail))}
-		labelText="Yapi地址根路径"
-		placeholder="请输入Yapi地址根路径"
-	/>
-	<TextInput
-		value={form.types_path}
-		on:change={(e) => (form.types_path = String(e.detail))}
-		labelText="项目类型目录文件夹路径"
-		placeholder="你想要把接口ts文件放到哪个文件夹下？"
-	/>
-	<TextInput
-		value={form.rate_limit}
-		on:change={(e) => (form.rate_limit = Number(e.detail))}
-		labelText="请求yapi-openapi最大并行请求数"
-		placeholder="请输入请求yapi-openapi最大并行请求数"
+<main
+	style="height:500px; overflow:auto; display:flex;flex-direction: column;gap:18px; padding-top:24px"
+>
+	<Textfield variant="outlined" bind:value={form.source_path} label="本地项目根路径"></Textfield>
+	<Textfield variant="outlined" bind:value={form.base_url} label="Yapi地址根路径"></Textfield>
+	<Textfield
+		variant="outlined"
+		bind:value={form.types_path}
+		label="你想要把接口ts文件放到哪个文件夹下？"
+	></Textfield>
+	<Textfield
 		type="number"
-	/>
-	<TextInput
-		value={form.break_seconds}
-		on:change={(e) => (form.break_seconds = Number(e.detail))}
-		labelText="请求yapi-openapi时间间隔"
-		placeholder="请输入请求yapi-openapi时间间隔"
+		variant="outlined"
+		bind:value={form.rate_limit}
+		label="请求yapi-openapi最大并行请求数"
+	></Textfield>
+	<Textfield
 		type="number"
-	/>
+		variant="outlined"
+		bind:value={form.break_seconds}
+		label="请求yapi-openapi时间间隔"
+	></Textfield>
 
-	<TextInput
-		value={form.request_path}
-		on:change={(e) => (form.request_path = String(e.detail))}
-		labelText="Request 目录文件夹路径"
-		placeholder="你想要把定义 request 的 ts 文件放到哪个文件夹下？"
-	/>
-	<TextInput
-		value={form.request_template}
-		on:change={(e) => (form.request_template = String(e.detail))}
-		labelText="请求模板字符串"
-		placeholder="请输入请求模板字符串"
-	/>
-	<Tooltip align="start" direction="top">
-		<p>$1: 请求名</p>
-		<p>$2: 请求类型</p>
-		<p>$3: 返回类型</p>
-		<p>$4: 接口地址</p>
-	</Tooltip>
+	<Textfield
+		variant="outlined"
+		bind:value={form.request_path}
+		label="你想要把定义 request 的 ts 文件放到哪个文件夹下？"
+	></Textfield>
+	<Wrapper>
+		<Textfield variant="outlined" bind:value={form.request_template} label="请求模板字符串"
+		></Textfield>
+		<Tooltip>
+			<p>$1: 请求名</p>
+			<p>$2: 请求类型</p>
+			<p>$3: 返回类型</p>
+			<p>$4: 接口地址</p>
+		</Tooltip>
+	</Wrapper>
 
-	<TextInput
-		value={form.type_import_template}
-		on:change={(e) => (form.type_import_template = String(e.detail))}
-		labelText="import类型模板"
-		placeholder="请输入import类型模板"
-	/>
-	<Tooltip align="start" direction="top">
-		<p>$1: Request Type 类型</p>
-		<p>$2: Response Type 类型</p>
-		<p>$3: 类型文件相对地址（请在前面添加类型文件夹别名）</p>
-	</Tooltip>
-	<TextInput
-		value={form.header_template}
-		on:change={(e) => (form.header_template = String(e.detail))}
-		labelText="请求文件首部字符串"
-		placeholder="请输入请求文件首部字符串"
-	/>
-	<TextInput
-		value={form.file_name_template}
-		on:change={(e) => (form.file_name_template = String(e.detail))}
-		labelText="文件名模板字符串"
-		placeholder="请输入文件名模板字符串"
-	/>
-	<Tooltip align="start" direction="top">
-		<p>$1: 文件名</p>
-	</Tooltip>
-	<TextInput
-		value={form.proxy}
-		on:change={(e) => (form.proxy = String(e.detail))}
-		labelText="代理地址"
-		placeholder="请输入代理地址"
-	/>
+	<Wrapper>
+		<Textfield variant="outlined" bind:value={form.type_import_template} label="import类型模板"
+		></Textfield>
+		<Tooltip>
+			<p>$1: Request Type 类型</p>
+			<p>$2: Response Type 类型</p>
+			<p>$3: 类型文件相对地址（请在前面添加类型文件夹别名）</p>
+		</Tooltip>
+	</Wrapper>
+
+	<Textfield variant="outlined" bind:value={form.header_template} label="请求文件首部字符串"
+	></Textfield>
+
+	<Wrapper>
+		<Textfield variant="outlined" bind:value={form.file_name_template} label="文件名模板字符串"
+		></Textfield>
+
+		<Tooltip>
+			<p>$1: 文件名</p>
+		</Tooltip>
+	</Wrapper>
+
+	<Textfield variant="outlined" bind:value={form.proxy} label="代理地址"
+	></Textfield>
+
 </main>
 <footer class="config-module-footer">
-	<Button type="primary" on:click={update_config}>提交</Button>
+	<Button variant="raised" on:click={update_config}>提交</Button>
 </footer>
 
 <style>

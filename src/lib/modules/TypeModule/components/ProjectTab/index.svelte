@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { Button, Search, Tab, TabContent, Tabs } from 'carbon-components-svelte';
-	import type { Config, ProjectList, QueueStatus, SuccessResponse } from '@/types/public';
+	import Tab, { Label } from '@smui/tab';
+	import TabBar from '@smui/tab-bar';
+	import Button from '@smui/button';
+	import type { Config, SuccessResponse } from '@/types/public';
 	import { onMount } from 'svelte';
 	import Category from './Category.svelte';
 	import { request } from '@/utils';
@@ -12,12 +14,26 @@
 	import { processingModalOpen, processingModalTotal, runningTask } from '@/store';
 	import { confirm } from '@tauri-apps/api/dialog';
 	import { slide } from 'svelte/transition';
+	import Textfield from '@smui/textfield';
+	import Accordion from '@smui-extra/accordion';
 
 	let config: Config | undefined;
 	let openAddModal = false;
 	let ready = false;
 	let searchKey = '';
 	let banInitModal = false;
+	$: project_list = config?.project_list || [];
+	let active: NonNullable<Config['project_list']>[number] = {
+		project_id: '',
+		categories: [],
+		token: ''
+	};
+
+	$: {
+		if (!banInitModal && ready && project_list.length == 0) {
+			openAddModal = true;
+		}
+	}
 
 	onMount(() => {
 		getConfig();
@@ -33,6 +49,9 @@
 			// @ts-expect-error
 			.then((res: SuccessResponse<Config>) => {
 				config = res.data;
+				if (config?.project_list?.length) {
+					active = config?.project_list?.[0];
+				}
 			})
 			.catch((e) => {
 				toast.push(JSON.stringify(e), toastTheme.error);
@@ -84,50 +103,53 @@
 		banInitModal = true;
 		getConfig();
 	}
-
-	$: project_list = config?.project_list || [];
-
-	$: {
-		if (!banInitModal && ready && project_list.length == 0) {
-			openAddModal = true;
-		}
-	}
 </script>
 
 <ProcessingModal />
 <AddProjectModal bind:open={openAddModal} bind:banInitModal />
 
 <div>
-	<Button kind="ghost" on:click={() => (openAddModal = true)}>添加新项目</Button>
-	<Button kind="ghost" on:click={() => fetchProjects(true)}>全量更新所有项目</Button>
-	<Button kind="ghost" on:click={() => fetchProjects(false)}>增量更新所有项目</Button>
+	<Button on:click={() => (openAddModal = true)}>添加新项目</Button>
+	<Button on:click={() => fetchProjects(true)}>全量更新所有项目</Button>
+	<Button on:click={() => fetchProjects(false)}>增量更新所有项目</Button>
 </div>
 <div class="flex items-center">
-	<Search bind:value={searchKey} on:blur={() => (banInitModal = false)} />
-	<Button kind="secondary" on:click={search}>搜索</Button>
-</div>
-<Tabs>
-	{#each project_list as project}
-		<Tab label={project.project_id} />
-	{/each}
+	<Textfield
+		variant="outlined"
+		bind:value={searchKey}
+		style="flex:1"
+		on:blur={() => (banInitModal = false)}
+		label="搜索"
+	></Textfield>
 
-	<svelte:fragment slot="content">
-		{#each project_list as project}
-			<TabContent>
-				<div transition:slide={{ duration: 300 }}>
-					<div style="margin-bottom:10px">
-						<Button on:click={() => fetchProjects(true, project.project_id)}
-							>全量更新当前项目</Button
-						>
-						<Button on:click={() => fetchProjects(false, project.project_id)}
-							>增量更新当前项目</Button
-						>
-					</div>
-					{#each project.categories as category}
-						<Category data={category} token={project.token} />
-					{/each}
-				</div>
-			</TabContent>
-		{/each}
-	</svelte:fragment>
-</Tabs>
+	<Button style="height:56px" color="secondary" variant="raised" on:click={search}>搜索</Button>
+</div>
+
+{#if active.project_id}
+	<TabBar
+		style="margin-top:12px;margin-bottom: 12px;"
+		tabs={project_list}
+		key={(project) => project.project_id}
+		let:tab
+		bind:active
+	>
+		<Tab minWidth {tab}>
+			<Label>{tab.project_id}</Label>
+		</Tab>
+	</TabBar>
+	<div transition:slide={{ duration: 300 }}>
+		<div style="margin-bottom:10px">
+			<Button variant="raised" on:click={() => fetchProjects(true, active.project_id)}
+				>全量更新当前项目</Button
+			>
+			<Button variant="raised" on:click={() => fetchProjects(false, active.project_id)}
+				>增量更新当前项目</Button
+			>
+		</div>
+		<Accordion>
+			{#each active.categories as category}
+				<Category data={category} token={active.token} />
+			{/each}
+		</Accordion>	
+	</div>
+{/if}

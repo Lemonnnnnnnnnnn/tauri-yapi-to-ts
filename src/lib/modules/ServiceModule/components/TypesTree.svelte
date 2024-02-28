@@ -5,8 +5,9 @@
 	import { toast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
 	import Node from './Node.svelte';
-	import { Button, Search } from 'carbon-components-svelte';
+	import Button from '@smui/button';
 	import { confirm } from '@tauri-apps/api/dialog';
+	import Textfield from '@smui/textfield';
 
 	let full_list: TypesTree[] = [];
 	let list: TypesTree[] = [];
@@ -93,11 +94,11 @@
 <main style="overflow:auto">
 	<div class="flex justify-between items-center">
 		<div class="header">对应的接口树：</div>
-		<Button kind="tertiary" on:click={update_service}>更新所有请求</Button>
+		<Button on:click={update_service}>更新所有请求</Button>
 	</div>
 	<div class="flex items-center" style="margin-top:10px;margin-bottom:10px">
-		<Search bind:value={searchKey} />
-		<Button kind="secondary" on:click={filter_data}>搜索</Button>
+		<Textfield style="flex:1" variant="outlined" bind:value={searchKey} label="搜索"></Textfield>
+		<Button style="height:56px" color="secondary" variant="raised" on:click={filter_data}>搜索</Button>
 	</div>
 
 	{#each list as item}

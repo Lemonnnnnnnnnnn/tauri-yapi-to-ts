@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { Modal, TextInput, ComposedModal } from 'carbon-components-svelte';
+	import Dialog, { Actions, Header, Content, Title } from '@smui/dialog';
+	import Textfield from '@smui/textfield';
 	import { request } from '@/utils';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
-	import type { QueueStatus, SuccessResponse } from '@/types/public';
+	import type { SuccessResponse } from '@/types/public';
 	import { runningTask, processingModalOpen, processingModalTotal } from '@/store';
 	import { confirm } from '@tauri-apps/api/dialog';
+	import Button, { Label } from '@smui/button';
 
 	let initForm = {
 		id: '',
@@ -59,28 +61,24 @@
 	}
 </script>
 
-<Modal
-	bind:open
-	preventCloseOnClickOutside
-	modalHeading="新增项目"
-	selectorPrimaryFocus="#source-code"
-	primaryButtonText="提交"
-	secondaryButtonText="取消"
-	on:click:button--secondary={() => {
-		open = false;
-	}}
-	on:submit={on_submit}
->
-	<TextInput
-		value={form.id}
-		on:change={(e) => (form.id = String(e.detail))}
-		labelText="Yapi项目ID"
-		placeholder="请输入Yapi项目ID"
-	/>
-	<TextInput
-		value={form.token}
-		on:change={(e) => (form.token = String(e.detail))}
-		labelText="Yapi项目token"
-		placeholder="请输入Yapi项目token"
-	/>
-</Modal>
+<Dialog bind:open fullscreen aria-labelledby="simple-title" aria-describedby="simple-content">
+	<Header>
+		<Title id="fullscreen-title">新增项目</Title>
+		<button style="background:#fff;" on:click={() => (open = false)}>&#x2715;</button>
+	</Header>
+	<Content
+		id="fullscreen-content"
+		style="display:flex; flex-direction:column; gap:12px;padding-top:12px;"
+	>
+		<Textfield variant="outlined" bind:value={form.id} label="Yapi项目ID"></Textfield>
+		<Textfield variant="outlined" bind:value={form.token} label="Yapi项目token"></Textfield>
+	</Content>
+	<div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+		<Button on:click={() => (open = false)}>
+			<Label>取消</Label>
+		</Button>
+		<Button on:click={on_submit}>
+			<Label>提交</Label>
+		</Button>
+	</div>
+</Dialog>
