@@ -36,7 +36,7 @@ jobs:
         with:
           version: 7.29.3
       - name: install frontend dependencies
-        run: pnpm install # change this to npm or pnpm depending on which one you use
+        run: pnpm install --no-frozen-lockfile # change this to npm or pnpm depending on which one you use
 
       - uses: tauri-apps/tauri-action@v0
         env:
