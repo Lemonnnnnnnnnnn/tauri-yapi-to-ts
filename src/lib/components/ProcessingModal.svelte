@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { listen } from '@tauri-apps/api/event';
-	import { Modal, ProgressBar } from 'carbon-components-svelte';
+	import Dialog, { Title, Content, Header } from '@smui/dialog';
 	import { onDestroy, onMount } from 'svelte';
 	import { runningTask, processingModalOpen, processingModalTotal } from '../store';
 	import { request } from '@/utils';
@@ -9,6 +9,7 @@
 	import { toastTheme } from '@/consts';
 	import { tweened } from 'svelte/motion';
 	import { cubicOut } from 'svelte/easing';
+	import LinearProgress from '@smui/linear-progress';
 
 	const progress = tweened(0, {
 		duration: 400,
@@ -36,7 +37,7 @@
 			});
 			log_list = log_list;
 			log_area.scrollTop = log_area.scrollHeight;
-			progress.set(event.payload.success_number);
+			progress.set(event.payload.success_number / $processingModalTotal);
 		});
 	});
 
@@ -66,25 +67,30 @@
 	}
 </script>
 
-<Modal
+<Dialog
 	bind:open={$processingModalOpen}
-	modalHeading="Log"
-	preventCloseOnClickOutside
-	passiveModal
-	on:close={onClose}
+	fullscreen
+	aria-labelledby="simple-title"
+	aria-describedby="simple-content"
+	on:SMUIDialog:closed={onClose}
 >
-	<div bind:this={log_area} style="max-height:300px;overflow-y:auto;">
-		{#each log_list as log}
-			{#if log.is_success}
-				<p>{log.msg}</p>
-			{:else}
-				<p style="color:crimson">{log.msg}</p>
-			{/if}
-		{/each}
-	</div>
-
-	<ProgressBar value={$progress} max={$processingModalTotal} labelText="进度条" />
-</Modal>
+	<Header>
+		<Title id="fullscreen-title">日志</Title>
+		<button style="background:#fff;" on:click={() => ($processingModalOpen = false)}>&#x2715;</button>
+	</Header>
+	<Content id="fullscreen-content">
+		<div bind:this={log_area} style="max-height:300px;overflow-y:auto;">
+			{#each log_list as log}
+				{#if log.is_success}
+					<p>{log.msg}</p>
+				{:else}
+					<p style="color:crimson">{log.msg}</p>
+				{/if}
+			{/each}
+		</div>
+		<LinearProgress progress={$progress} />
+	</Content>
+</Dialog>
 
 <style>
 </style>

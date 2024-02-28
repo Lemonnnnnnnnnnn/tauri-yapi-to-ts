@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { toast } from '@zerodevx/svelte-toast';
-	import type { InterfaceType, QueueStatus, SuccessResponse } from '@/types/public';
+	import type { InterfaceType, SuccessResponse } from '@/types/public';
 	import { request } from '@/utils';
 	import { toastTheme } from '@/consts';
-	import { InlineLoading } from 'carbon-components-svelte';
 	import { processingModalTotal, processingModalOpen, runningTask } from '@/store';
 	import { confirm } from '@tauri-apps/api/dialog';
 

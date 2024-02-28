@@ -3,7 +3,7 @@
 	import { request } from '@/utils';
 	import { open } from '@tauri-apps/api/dialog';
 	import { toast } from '@zerodevx/svelte-toast';
-	import { Button } from 'carbon-components-svelte';
+	import Button from '@smui/button';
 	import type { SuccessResponse } from '@/types/public';
 
 	export let need_init: boolean;
@@ -32,7 +32,7 @@
 </script>
 
 <main class="flex justify-center items-center w-full" style="min-height:100vh">
-	<Button type="primary" on:click={choose}>选择代码库</Button>
+	<Button variant="raised" on:click={choose}>选择代码库</Button>
 </main>
 
 <style>

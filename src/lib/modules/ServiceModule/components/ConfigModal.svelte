@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { Modal, TextInput, Tooltip } from 'carbon-components-svelte';
+	import Textfield from '@smui/textfield';
+	import Tooltip, { Title, Wrapper } from '@smui/tooltip';
 	import { request } from '@/utils';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
 	import type { Config, SuccessResponse } from '@/types/public';
+	import Dialog, { Actions, Header, Content } from '@smui/dialog';
+	import Button, { Label } from '@smui/button';
 
 	export let open: boolean;
 	export let load_types: boolean;
@@ -52,7 +55,62 @@
 	}
 </script>
 
-<Modal
+<Dialog bind:open fullscreen aria-labelledby="simple-title" aria-describedby="simple-content">
+	<Header>
+		<Title id="fullscreen-title">初始化配置</Title>
+		<button style="background:#fff;" on:click={() => (open = false)}>&#x2715;</button>
+	</Header>
+	<Content
+		id="fullscreen-content"
+		style="display:flex; flex-direction:column; gap:12px;padding-top:12px;"
+	>
+		<Textfield
+			variant="outlined"
+			bind:value={form.request_path}
+			label="你想要把定义 request 的 ts 文件放到哪个文件夹下？"
+		></Textfield>
+		<Wrapper>
+			<Textfield variant="outlined" bind:value={form.request_template} label="请求模板字符串"
+			></Textfield>
+			<Tooltip>
+				<p>$1: 请求名</p>
+				<p>$2: 请求类型</p>
+				<p>$3: 返回类型</p>
+				<p>$4: 接口地址</p>
+			</Tooltip>
+		</Wrapper>
+
+		<Wrapper>
+			<Textfield variant="outlined" bind:value={form.type_import_template} label="import类型模板"
+			></Textfield>
+			<Tooltip>
+				<p>$1: Request Type 类型</p>
+				<p>$2: Response Type 类型</p>
+				<p>$3: 类型文件相对地址（请在前面添加类型文件夹别名）</p>
+			</Tooltip>
+		</Wrapper>
+		<Textfield variant="outlined" bind:value={form.header_template} label="请求文件首部字符串"
+		></Textfield>
+		<Wrapper>
+			<Textfield variant="outlined" bind:value={form.file_name_template} label="文件名模板字符串"
+			></Textfield>
+
+			<Tooltip>
+				<p>$1: 文件名</p>
+			</Tooltip>
+		</Wrapper>
+	</Content>
+	<div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+		<Button on:click={() => (open = false)}>
+			<Label>取消</Label>
+		</Button>
+		<Button on:click={on_submit}>
+			<Label>提交</Label>
+		</Button>
+	</div>
+</Dialog>
+
+<!-- <Modal
 	bind:open
 	modalHeading="初始化配置"
 	preventCloseOnClickOutside
@@ -63,52 +121,8 @@
 	}}
 	on:submit={on_submit}
 >
-	<TextInput
-		value={form.request_path}
-		on:change={(e) => (form.request_path = String(e.detail))}
-		labelText="Request 目录文件夹路径"
-		placeholder="你想要把定义 request 的 ts 文件放到哪个文件夹下？"
-	/>
-	<TextInput
-		value={form.request_template}
-		on:change={(e) => (form.request_template = String(e.detail))}
-		labelText="请求模板字符串"
-		placeholder="请输入请求模板字符串"
-	/>
-	<Tooltip align="start" direction="top">
-		<p>$1: 请求名</p>
-		<p>$2: 请求类型</p>
-		<p>$3: 返回类型</p>
-		<p>$4: 接口地址</p>
-	</Tooltip>
-
-	<TextInput
-		value={form.type_import_template}
-		on:change={(e) => (form.type_import_template = String(e.detail))}
-		labelText="import类型模板"
-		placeholder="请输入import类型模板"
-	/>
-	<Tooltip align="start" direction="top">
-		<p>$1: Request Type 类型</p>
-		<p>$2: Response Type 类型</p>
-		<p>$3: 类型文件相对地址（请在前面添加类型文件夹别名）</p>
-	</Tooltip>
-	<TextInput
-		value={form.header_template}
-		on:change={(e) => (form.header_template = String(e.detail))}
-		labelText="请求文件首部字符串"
-		placeholder="请输入请求文件首部字符串"
-	/>
-	<TextInput
-		value={form.file_name_template}
-		on:change={(e) => (form.file_name_template = String(e.detail))}
-		labelText="文件名模板字符串"
-		placeholder="请输入文件名模板字符串"
-	/>
-	<Tooltip align="start" direction="top">
-		<p>$1: 文件名</p>
-	</Tooltip>
-</Modal>
+	
+</Modal> -->
 
 <style>
 </style>
