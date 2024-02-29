@@ -67,7 +67,7 @@
 			return;
 		}
 
-		const confirmed = await confirm('操作将重新生成ts文件，是否确定？');
+		const confirmed = await confirm('操作将重新生成ts文件，请确保本地代码已经保存！');
 
 		if (!confirmed) return;
 
