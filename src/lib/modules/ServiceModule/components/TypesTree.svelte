@@ -18,7 +18,7 @@
 	});
 
 	function get_data() {
-		request('get_request_list', { key: "" })
+		request('get_request_list', { key: '' })
 			// @ts-expect-error
 			.then((res: SuccessResponse<TypesTree[]>) => {
 				full_list = sort(res.data);
@@ -91,19 +91,25 @@
 	}
 </script>
 
-<main style="overflow:auto">
-	<div class="flex justify-between items-center">
-		<div class="header">对应的接口树：</div>
-		<Button on:click={update_service}>更新所有请求</Button>
-	</div>
-	<div class="flex items-center" style="margin-top:10px;margin-bottom:10px">
-		<Textfield style="flex:1" variant="outlined" bind:value={searchKey} label="搜索"></Textfield>
-		<Button style="height:56px" color="secondary" variant="raised" on:click={filter_data}>搜索</Button>
+<main style="height:95%;display:flex ; flex-direction:column">
+	<div>
+		<div class="flex justify-between items-center">
+			<div class="header">对应的接口树：</div>
+			<Button on:click={update_service}>更新所有请求</Button>
+		</div>
+		<div class="flex items-center" style="margin-top:10px;margin-bottom:10px">
+			<Textfield style="flex:1" variant="outlined" bind:value={searchKey} label="搜索"></Textfield>
+			<Button style="height:56px" color="secondary" variant="raised" on:click={filter_data}
+				>搜索</Button
+			>
+		</div>
 	</div>
 
-	{#each list as item}
-		<Node {...item} expanded={true} />
-	{/each}
+	<div style="flex:1; overflow:auto">
+		{#each list as item}
+			<Node {...item} expanded={true} />
+		{/each}
+	</div>
 </main>
 
 <style>
