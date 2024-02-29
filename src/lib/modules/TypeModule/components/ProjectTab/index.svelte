@@ -3,7 +3,7 @@
 	import TabBar from '@smui/tab-bar';
 	import Button from '@smui/button';
 	import type { Config, SuccessResponse } from '@/types/public';
-	import { onMount } from 'svelte';
+	import { SvelteComponent, onMount } from 'svelte';
 	import Category from './Category.svelte';
 	import { request } from '@/utils';
 	import { toast } from '@zerodevx/svelte-toast';
@@ -108,48 +108,54 @@
 <ProcessingModal />
 <AddProjectModal bind:open={openAddModal} bind:banInitModal />
 
-<div>
-	<Button on:click={() => (openAddModal = true)}>添加新项目</Button>
-	<Button on:click={() => fetchProjects(true)}>全量更新所有项目</Button>
-	<Button on:click={() => fetchProjects(false)}>增量更新所有项目</Button>
-</div>
-<div class="flex items-center">
-	<Textfield
-		variant="outlined"
-		bind:value={searchKey}
-		style="flex:1"
-		on:blur={() => (banInitModal = false)}
-		label="搜索"
-	></Textfield>
-
-	<Button style="height:56px" color="secondary" variant="raised" on:click={search}>搜索</Button>
-</div>
-
-{#if active.project_id}
-	<TabBar
-		style="margin-top:12px;margin-bottom: 12px;"
-		tabs={project_list}
-		key={(project) => project.project_id}
-		let:tab
-		bind:active
-	>
-		<Tab minWidth {tab}>
-			<Label>{tab.project_id}</Label>
-		</Tab>
-	</TabBar>
-	<div transition:slide={{ duration: 300 }}>
-		<div style="margin-bottom:10px">
-			<Button variant="raised" on:click={() => fetchProjects(true, active.project_id)}
-				>全量更新当前项目</Button
-			>
-			<Button variant="raised" on:click={() => fetchProjects(false, active.project_id)}
-				>增量更新当前项目</Button
-			>
+<div style="height:95vh; display:flex; flex-direction:column; overflow:auto">
+	<div>
+		<div>
+			<Button on:click={() => (openAddModal = true)}>添加新项目</Button>
+			<Button on:click={() => fetchProjects(true)}>全量更新所有项目</Button>
+			<Button on:click={() => fetchProjects(false)}>增量更新所有项目</Button>
 		</div>
-		<Accordion>
+		<div class="flex items-center">
+			<Textfield
+				variant="outlined"
+				bind:value={searchKey}
+				style="flex:1"
+				on:blur={() => (banInitModal = false)}
+				label="搜索"
+			></Textfield>
+
+			<Button style="height:56px" color="secondary" variant="raised" on:click={search}>搜索</Button>
+		</div>
+		{#if active.project_id}
+			<TabBar
+				style="margin-top:12px;margin-bottom: 12px;"
+				tabs={project_list}
+				key={(project) => project.project_id}
+				let:tab
+				bind:active
+			>
+				<Tab minWidth {tab}>
+					<Label>{tab.project_id}</Label>
+				</Tab>
+			</TabBar>
+			<div transition:slide={{ duration: 300 }}>
+				<div style="margin-bottom:10px">
+					<Button variant="raised" on:click={() => fetchProjects(true, active.project_id)}
+						>全量更新当前项目</Button
+					>
+					<Button variant="raised" on:click={() => fetchProjects(false, active.project_id)}
+						>增量更新当前项目</Button
+					>
+				</div>
+			</div>
+		{/if}
+	</div>
+
+	{#if active.project_id}
+		<Accordion style="flex:1 ; overflow:auto">
 			{#each active.categories as category}
 				<Category data={category} token={active.token} />
 			{/each}
-		</Accordion>	
-	</div>
-{/if}
+		</Accordion>
+	{/if}
+</div>
