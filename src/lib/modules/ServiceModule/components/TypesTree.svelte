@@ -18,7 +18,7 @@
 	});
 
 	function get_data() {
-		request('get_request_list', { key: '' })
+		request('get_request_list')
 			// @ts-expect-error
 			.then((res: SuccessResponse<TypesTree[]>) => {
 				full_list = sort(res.data);
