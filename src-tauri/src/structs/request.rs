@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::is_string_in_file;
 
-use super::{config::Config, context::Context};
+use super::{config::Config, context::Context, resolver::utils::get_legal_name};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RequestNode {
@@ -186,8 +186,8 @@ impl Request {
 
     // 检查生成service的 type 文件是否有 Request/Response interface
     fn check_file(&self, file_path: &PathBuf, file_name_without_ext: &String) -> bool {
-        let req = format!("{}Request", file_name_without_ext);
-        let resp = format!("{}Response", file_name_without_ext);
+        let req = format!("{}Request", get_legal_name(file_name_without_ext) );
+        let resp = format!("{}Response", get_legal_name(file_name_without_ext));
 
         if is_string_in_file(&file_path, &req) && is_string_in_file(&file_path, &resp) {
             return true;
@@ -208,8 +208,8 @@ impl Request {
             .type_import_template
             .clone()
             .unwrap()
-            .replace("$1", &format!("{}Request", &file_name_string))
-            .replace("$2", &format!("{}Response", &file_name_string))
+            .replace("$1", &format!("{}Request", get_legal_name(&file_name_string)))
+            .replace("$2", &format!("{}Response", get_legal_name(&file_name_string)))
             .replace("$3", &format!("{}/{}", sub_path_unix, file_name_string))
             + "\n";
 
@@ -233,8 +233,8 @@ impl Request {
             .clone()
             .unwrap()
             .replace("$1", &file_name_string)
-            .replace("$2", &format!("{}Request", &file_name_string))
-            .replace("$3", &format!("{}Response", &file_name_string))
+            .replace("$2", &format!("{}Request", get_legal_name(&file_name_string) ))
+            .replace("$3", &format!("{}Response", get_legal_name(&file_name_string)))
             .replace(
                 "$4",
                 &format!("{}/{}", sub_path_unix.as_str(), &file_name_string),
