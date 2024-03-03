@@ -1,10 +1,6 @@
 export interface Config {
-    source_path?: string
     base_url?: string
-    rate_limit?: number
-    types_path?: string
-    types_full_path?: string,
-    break_seconds?: number,
+    types_path_relative?: string
     project_list?: ProjectList[],
     request_path?: string,
     request_template?: string,

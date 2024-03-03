@@ -12,7 +12,6 @@
 
 	onMount(() => {
 		request('check_request_config')
-			// @ts-expect-error
 			.then((res: SuccessResponse<null>) => {
 				load_types = true;
 			})

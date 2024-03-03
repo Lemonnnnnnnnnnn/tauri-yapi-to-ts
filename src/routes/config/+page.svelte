@@ -11,10 +11,9 @@
 	import { onMount } from 'svelte';
 
 	let init_form: Config = {
-		source_path: '',
 		base_url: '',
 		rate_limit: 0,
-		types_path: '',
+		types_path_relative: '',
 		types_full_path: '',
 		break_seconds: 0,
 		request_path: '',
@@ -28,8 +27,7 @@
 	let form = init_form;
 
 	onMount(() => {
-		// @ts-expect-error
-		request('get_config', {}).then((res: SuccessResponse<Config>) => {
+		request('get_global_config', {}).then((res: SuccessResponse<Config>) => {
 			form = res.data;
 		});
 	});
@@ -39,7 +37,7 @@
 			toast.push('请输入Yapi地址根路径', toastTheme.error);
 			return;
 		}
-		if (!form.types_path) {
+		if (!form.types_path_relative) {
 			toast.push('请输入项目类型目录文件夹路径', toastTheme.error);
 			return;
 		}
@@ -74,7 +72,6 @@
 			return;
 		}
 
-		// @ts-expect-error
 		request('update_config', form).then((res: SuccessResponse<Config>) => {
 			toast.push(res.message, toastTheme.success);
 		});
@@ -84,11 +81,10 @@
 <main
 	style="height:500px; overflow:auto; display:flex;flex-direction: column;gap:18px; padding-top:24px"
 >
-	<Textfield variant="outlined" bind:value={form.source_path} label="本地项目根路径"></Textfield>
 	<Textfield variant="outlined" bind:value={form.base_url} label="Yapi地址根路径"></Textfield>
 	<Textfield
 		variant="outlined"
-		bind:value={form.types_path}
+		bind:value={form.types_path_relative}
 		label="你想要把接口ts文件放到哪个文件夹下？"
 	></Textfield>
 	<Textfield

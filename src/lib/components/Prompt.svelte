@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { toastTheme } from '@/consts';
-	import { request } from '@/utils';
 	import { open } from '@tauri-apps/api/dialog';
 	import { toast } from '@zerodevx/svelte-toast';
 	import Button from '@smui/button';
 	import type { SuccessResponse } from '@/types/public';
-
-	export let need_init: boolean;
-	export let load_project: boolean;
+	import { invoke } from '@tauri-apps/api';
 
 	function choose() {
 		open({
@@ -15,16 +12,11 @@
 			directory: true,
 			multiple: false
 		}).then((res) => {
-			request('read_config', { dir_path: res })
-				// @ts-expect-error
-				.then((res: SuccessResponse<null>) => {
+			invoke<SuccessResponse<null>>('add_project', { sourcePath: res })
+				.then((res) => {
 					toast.push(JSON.stringify(res.message), toastTheme.success);
-					need_init = false;
-					load_project = true;
 				})
 				.catch((e) => {
-					need_init = true;
-					load_project = false;
 					toast.push(JSON.stringify(e), toastTheme.error);
 				});
 		});

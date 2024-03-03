@@ -43,6 +43,9 @@ devDependencies:
   '@smui/button':
     specifier: 7.0.0-beta.16
     version: 7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3)
+  '@smui/checkbox':
+    specifier: 7.0.0-beta.16
+    version: 7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3)
   '@sveltejs/adapter-auto':
     specifier: ^2.0.0
     version: 2.1.1(@sveltejs/kit@1.30.3)
@@ -471,7 +474,6 @@ packages:
       '@material/theme': 14.0.0
       '@material/touch-target': 14.0.0
       tslib: 2.6.2
-    dev: false
 
   /@material/chips@14.0.0:
     resolution: {integrity: sha512-SfZX/Ovdq4NgjdtIr/N1O3fEHisZC+t8G8629OV/NrniSS6rKOa+q1mImzna8R4pfuYO+7nT5nZewQpL/JSYaQ==}
@@ -1153,7 +1155,6 @@ packages:
     transitivePeerDependencies:
       - svelte
       - typescript
-    dev: false
 
   /@smui/chips@7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3):
     resolution: {integrity: sha512-MwEsdUdUyPMzucHfMurGQ8G+EW/jZXgM3lWxL9Erul6Eua/whJuDznJEtAEGEbjjZ6HSTrfarVY274tXRcW7rg==}

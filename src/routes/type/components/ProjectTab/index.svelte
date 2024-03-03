@@ -10,56 +10,58 @@
 	import { toastTheme } from '@/consts';
 	import AddProjectModal from './AddProjectModal.svelte';
 	import { listen } from '@tauri-apps/api/event';
-	import ProcessingModal from '@/components/ProcessingModal.svelte';
+	import ProcessingModal from './ProcessingModal.svelte';
 	import { processingModalOpen, processingModalTotal, runningTask } from '@/store';
 	import { confirm } from '@tauri-apps/api/dialog';
 	import { slide } from 'svelte/transition';
 	import Textfield from '@smui/textfield';
 	import Accordion from '@smui-extra/accordion';
 
-	let config: Config | undefined;
+	export let config: Config | undefined;
 	let openAddModal = false;
-	let ready = false;
 	let searchKey = '';
-	let banInitModal = false;
 	$: project_list = config?.project_list || [];
-	let active: NonNullable<Config['project_list']>[number] = {
+
+	let active : NonNullable<Config['project_list']>[number] = {
 		project_id: '',
 		categories: [],
 		token: ''
 	};
 
-	$: {
-		if (!banInitModal && ready && project_list.length == 0) {
-			openAddModal = true;
-		}
-	}
+
+	// $: {
+	// 	if (project_list.length == 0) {
+	// 		openAddModal = true;
+	// 	}
+	// }
 
 	onMount(() => {
-		getConfig();
+		// getConfig();
+		active = project_list[0];
+		openAddModal = true;
 	});
 
 	listen('task_completed', (_) => {
 		toast.push('任务已完成');
-		getConfig();
+		// getConfig();
 	});
 
-	function getConfig() {
-		request('get_config', { key: searchKey })
-			// @ts-expect-error
-			.then((res: SuccessResponse<Config>) => {
-				config = res.data;
-				if (config?.project_list?.length) {
-					active = config?.project_list?.[0];
-				}
-			})
-			.catch((e) => {
-				toast.push(JSON.stringify(e), toastTheme.error);
-			})
-			.finally(() => {
-				ready = true;
-			});
-	}
+	// function getConfig() {
+	// 	request('get_global_config', { key: searchKey })
+	// 		// @ts-expect-error
+	// 		.then((res: SuccessResponse<Config>) => {
+	// 			config = res.data;
+	// 			if (config?.project_list?.length) {
+	// 				active = config?.project_list?.[0];
+	// 			}
+	// 		})
+	// 		.catch((e) => {
+	// 			toast.push(JSON.stringify(e), toastTheme.error);
+	// 		})
+	// 		.finally(() => {
+	// 			ready = true;
+	// 		});
+	// }
 
 	async function fetchProjects(is_full_update: boolean, project_id?: string) {
 		if ($runningTask) {
@@ -83,7 +85,6 @@
 		}
 		toast.push('正在添加任务...');
 		request('update_projects', { projects, is_full_update })
-			// @ts-expect-error
 			.then((res: SuccessResponse<number>) => {
 				if (res.data === 0) {
 					toast.push('无待执行的任务');
@@ -100,13 +101,13 @@
 	}
 
 	function search() {
-		banInitModal = true;
-		getConfig();
+		// banInitModal = true;
+		// getConfig();
 	}
 </script>
 
 <ProcessingModal />
-<AddProjectModal bind:open={openAddModal} bind:banInitModal />
+<AddProjectModal bind:open={openAddModal} />
 
 <div style="height:95vh; display:flex; flex-direction:column; overflow:auto">
 	<div>
@@ -116,17 +117,11 @@
 			<Button on:click={() => fetchProjects(false)}>增量更新所有项目</Button>
 		</div>
 		<div class="flex items-center">
-			<Textfield
-				variant="outlined"
-				bind:value={searchKey}
-				style="flex:1"
-				on:blur={() => (banInitModal = false)}
-				label="搜索"
-			></Textfield>
+			<Textfield variant="outlined" bind:value={searchKey} style="flex:1" label="搜索"></Textfield>
 
 			<Button style="height:56px" color="secondary" variant="raised" on:click={search}>搜索</Button>
 		</div>
-		{#if active.project_id}
+		{#if active?.project_id}
 			<TabBar
 				style="margin-top:12px;margin-bottom: 12px;"
 				tabs={project_list}
@@ -151,7 +146,7 @@
 		{/if}
 	</div>
 
-	{#if active.project_id}
+	{#if active?.project_id}
 		<Accordion style="flex:1 ; overflow:auto">
 			{#each active.categories as category}
 				<Category data={category} token={active.token} />

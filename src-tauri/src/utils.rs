@@ -40,7 +40,7 @@ pub fn is_string_in_file(ts_file: &PathBuf, string: &str) -> bool {
             return true;
         }
     }
-    return false;
+    false
 }
 
 

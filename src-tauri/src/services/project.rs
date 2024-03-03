@@ -1,6 +1,11 @@
+use std::{
+    fs::OpenOptions,
+    io::{self, Read, Write},
+};
+
 use serde::{Deserialize, Serialize};
-use serde_json::{from_str, json};
-use tauri::{Manager, State};
+use serde_json::{from_str, json, Value};
+use tauri::{AppHandle, Manager, State};
 
 use crate::structs::{
     category::Category,
@@ -10,7 +15,11 @@ use crate::structs::{
     queue::Queue,
 };
 
-use super::{category::add_categories_task, common::CustomResponse};
+use super::{
+    category::add_categories_task,
+    common::CustomResponse,
+    conversion::string_to_path_buf,
+};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct ProjectList {
@@ -118,7 +127,7 @@ fn init_short_project(
                 .map(|interface| InterfaceShort {
                     id: interface.id.clone(),
                     name: None,
-                    path: None
+                    path: None,
                 })
                 .collect::<Vec<InterfaceShort>>(),
         })
@@ -156,3 +165,4 @@ fn merge_categories(new_project: &ProjectShort, old_project: &mut ProjectShort) 
     }
 }
 
+//  -----------
