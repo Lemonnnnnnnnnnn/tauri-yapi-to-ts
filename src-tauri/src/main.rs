@@ -24,7 +24,7 @@ use crate::services::{
 use crate::commands::{
     global_config::{add_project, load_latest_project, update_config},
     yapi::category::get_cat_interface_list,
-    yapi::config::{load_project, update_project_config},
+    yapi::config::{load_project_config, update_project_config},
     yapi::interface::{add_interface_task, cancel_task, start_task, write_to_file},
     yapi::project::{get_yapi_project_base_info, get_yapi_project_cat_menu},
 };
@@ -127,7 +127,7 @@ fn main() {
             update_request,
             add_project,
             load_latest_project,
-            load_project,
+            load_project_config,
             update_project_config,
             get_yapi_project_base_info,
             get_yapi_project_cat_menu,

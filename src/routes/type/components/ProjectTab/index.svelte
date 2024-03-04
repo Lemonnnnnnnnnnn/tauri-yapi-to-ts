@@ -18,8 +18,10 @@
 	import Accordion from '@smui-extra/accordion';
 
 	export let config: Config | undefined;
+	export let loadProject: ()=> void
 	let openAddModal = false;
 	let searchKey = '';
+
 	$: project_list = config?.project_list || [];
 
 	let active : NonNullable<Config['project_list']>[number] = {
@@ -87,7 +89,7 @@
 </script>
 
 <ProcessingModal />
-<AddProjectModal bind:open={openAddModal} project_list={project_list} />
+<AddProjectModal loadProject={loadProject} bind:open={openAddModal} project_list={project_list} />
 
 <div style="height:95vh; display:flex; flex-direction:column; overflow:auto">
 	<div>

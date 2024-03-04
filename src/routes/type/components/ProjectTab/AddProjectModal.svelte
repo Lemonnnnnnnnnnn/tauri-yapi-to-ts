@@ -16,6 +16,7 @@
 
 	export let open: boolean;
 	export let project_list: Config['project_list'];
+	export let loadProject: ()=> void
 
 	let form = initForm;
 
@@ -44,6 +45,8 @@
 				toast.push('项目已存在', toastTheme.error);
 				return;
 			}
+			
+			loadProject()
 
 			toast.push('正在获取项目分类...', toastTheme.success);
 			const menuList = await invoke<SuccessResponse<CategoryMenuList>>(

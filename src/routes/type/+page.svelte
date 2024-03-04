@@ -17,7 +17,7 @@
 	}
 
 	function loadProject() {
-		invoke<SuccessResponse<Config>>('load_project', { sourcePath: $sourcePath })
+		invoke<SuccessResponse<Config>>('load_project_config', { sourcePath: $sourcePath })
 			.then((res) => {
 				toast.push(res.message, toastTheme.success);
 				config = res.data;
@@ -51,5 +51,5 @@
 {/if}
 
 {#if load_project}
-	<ProjectTab bind:config />
+	<ProjectTab bind:config loadProject={loadProject} />
 {/if}

@@ -32,7 +32,7 @@ pub fn update_project_config(
 }
 
 #[tauri::command]
-pub fn load_project(source_path: &str, app_handle: AppHandle) -> Result<WebResponse, String> {
+pub fn load_project_config(source_path: &str, app_handle: AppHandle) -> Result<WebResponse, String> {
     match get_project_config(source_path) {
         Ok(config) => {
             if config.base_url.is_empty() {
