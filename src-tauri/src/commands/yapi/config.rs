@@ -19,7 +19,7 @@ pub fn update_project_config(
         Ok(mut config) => {
             config.merge_from_request(data);
 
-            match write_project_config(source_path.to_string(), config) {
+            match write_project_config(source_path, config) {
                 Ok(_) => Ok(WebResponse {
                     message: String::from("更新成功！"),
                     data: None,

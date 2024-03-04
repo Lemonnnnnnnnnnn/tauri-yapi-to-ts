@@ -34,10 +34,10 @@ pub fn get_project_config(source_path: &str) -> Result<YapiConfig, io::Error> {
     Ok(from_str(&contents)?)
 }
 
-pub fn write_project_config(source_path: String, yapi_config: YapiConfig) -> Result<(), io::Error> {
+pub fn write_project_config(source_path: &str, yapi_config: YapiConfig) -> Result<(), io::Error> {
     let mut file = OpenOptions::new()
         .write(true)
-        .open(string_to_path_buf(source_path).join(PROJECT_CONFIG_NAME))?;
+        .open(string_to_path_buf(source_path.to_string()).join(PROJECT_CONFIG_NAME))?;
     file.write_all(json!(yapi_config).to_string().as_bytes())?;
     Ok(())
 }

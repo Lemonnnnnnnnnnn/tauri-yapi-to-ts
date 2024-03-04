@@ -1,12 +1,11 @@
 <script lang="ts">
-	import Dialog, { Actions, Header, Content, Title } from '@smui/dialog';
+	import Dialog, { Header, Content, Title } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
-	import { request, startTask } from '@/utils';
+	import { startTask } from '@/utils';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
-	import type { SuccessResponse } from '@/types/public';
-	import { runningTask, processingModalOpen, processingModalTotal, sourcePath } from '@/store';
-	import { confirm } from '@tauri-apps/api/dialog';
+	import type { Config, SuccessResponse } from '@/types/public';
+	import { sourcePath } from '@/store';
 	import Button, { Label } from '@smui/button';
 	import { invoke } from '@tauri-apps/api';
 	import type { CategoryDataList, CategoryMenuList, ProjectBaseInfo } from '@/types/yapi';
@@ -16,15 +15,11 @@
 	};
 
 	export let open: boolean;
+	export let project_list: Config['project_list'];
 
 	let form = initForm;
 
 	async function on_submit() {
-		// if ($runningTask) {
-		// 	toast.push('正在执行任务...请稍等', toastTheme.error);
-		// 	return;
-		// }
-
 		if (!form.token) {
 			toast.push('请输入Yapi项目token', toastTheme.error);
 			return;
@@ -39,6 +34,17 @@
 					sourcePath: $sourcePath
 				}
 			);
+
+			if (
+				project_list &&
+				project_list.findIndex(
+					(project) => String(project.project_id) === String(baseInfo.data._id)
+				) > -1
+			) {
+				toast.push('项目已存在', toastTheme.error);
+				return;
+			}
+
 			toast.push('正在获取项目分类...', toastTheme.success);
 			const menuList = await invoke<SuccessResponse<CategoryMenuList>>(
 				'get_yapi_project_cat_menu',
@@ -72,32 +78,10 @@
 			}
 
 			startTask();
-			open=false;
+			open = false;
 		} catch (e) {
 			toast.push(JSON.stringify(e), toastTheme.error);
 		}
-
-		// const confirmed = await confirm('操作将生成ts文件，是否确定？');
-
-		// if (!confirmed) return;
-
-		// toast.push('正在添加任务...');
-		// request('update_projects', { projects: [form], is_full_update: true })
-		// 	.then((res: SuccessResponse<number>) => {
-		// 		if (res.data === 0) {
-		// 			toast.push('无待执行的任务');
-		// 		} else {
-		// 			toast.push(res.message, toastTheme.success);
-		// 			processingModalOpen.update(() => true);
-		// 			processingModalTotal.update(() => res.data);
-		// 			runningTask.update(() => true);
-		// 		}
-		// 		open = false;
-		// 		form = initForm;
-		// 	})
-		// 	.catch((e) => {
-		// 		toast.push(JSON.stringify(e), toastTheme.error);
-		// 	});
 	}
 </script>
 

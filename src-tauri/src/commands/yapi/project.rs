@@ -2,10 +2,13 @@ use serde_json::json;
 use tauri::AppHandle;
 
 use crate::{
-    models::web_response::WebResponse,
+    models::{web_response::WebResponse, yapi::config::YapiProject},
     services::{
         log::{log, log_error},
-        yapi::project::{fetch_project_base_info, fetch_project_cat_menu},
+        yapi::{
+            config::{get_project_config, write_project_config},
+            project::{fetch_project_base_info, fetch_project_cat_menu},
+        },
     },
 };
 
@@ -17,10 +20,32 @@ pub async fn get_yapi_project_base_info(
 ) -> Result<WebResponse, String> {
     match fetch_project_base_info(token.to_string(), source_path, &app_handle).await {
         Ok(yapi_project_base_info) => {
-            log(
-                &app_handle,
-                format!("获取yapi项目{}成功", yapi_project_base_info.name),
-            );
+            match get_project_config(source_path) {
+                Ok(mut config) => {
+                    // if config.project_list has not new project, add its to config
+                    if !config.project_list.iter().any(|project| {
+                        project.project_id == format!("{}", yapi_project_base_info._id)
+                    }) {
+                        config.project_list.push(YapiProject {
+                            token: token.to_string(),
+                            project_id: format!("{}", yapi_project_base_info._id),
+                            project_name: Some(yapi_project_base_info.name.clone()),
+                            categories: vec![],
+                        });
+
+                        // write config
+                        match write_project_config(source_path, config) {
+                            Ok(_) => {}
+                            Err(e) => {
+                                log(&app_handle, e.to_string());
+                            }
+                        };
+                    }
+                }
+                Err(e) => {
+                    log(&app_handle, e.to_string());
+                }
+            }
             Ok(WebResponse {
                 message: format!("获取yapi项目{}成功", yapi_project_base_info.name),
                 data: Some(json!(yapi_project_base_info)),

@@ -28,40 +28,20 @@
 		token: ''
 	};
 
-
-	// $: {
-	// 	if (project_list.length == 0) {
-	// 		openAddModal = true;
-	// 	}
-	// }
+	$: {
+		if (project_list.length == 0) {
+			openAddModal = true;
+		}
+	}
 
 	onMount(() => {
 		// getConfig();
 		active = project_list[0];
-		openAddModal = true;
 	});
 
 	listen('task_completed', (_) => {
 		toast.push('任务已完成');
-		// getConfig();
 	});
-
-	// function getConfig() {
-	// 	request('get_global_config', { key: searchKey })
-	// 		// @ts-expect-error
-	// 		.then((res: SuccessResponse<Config>) => {
-	// 			config = res.data;
-	// 			if (config?.project_list?.length) {
-	// 				active = config?.project_list?.[0];
-	// 			}
-	// 		})
-	// 		.catch((e) => {
-	// 			toast.push(JSON.stringify(e), toastTheme.error);
-	// 		})
-	// 		.finally(() => {
-	// 			ready = true;
-	// 		});
-	// }
 
 	async function fetchProjects(is_full_update: boolean, project_id?: string) {
 		if ($runningTask) {
@@ -107,7 +87,7 @@
 </script>
 
 <ProcessingModal />
-<AddProjectModal bind:open={openAddModal} />
+<AddProjectModal bind:open={openAddModal} project_list={project_list} />
 
 <div style="height:95vh; display:flex; flex-direction:column; overflow:auto">
 	<div>
