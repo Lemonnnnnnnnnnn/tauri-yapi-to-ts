@@ -2,7 +2,12 @@
 	import { listen } from '@tauri-apps/api/event';
 	import Dialog, { Title, Content, Header } from '@smui/dialog';
 	import { onDestroy, onMount } from 'svelte';
-	import { runningTask, processingModalOpen, processingModalTotal } from '../../../../lib/store';
+	import {
+		runningTask,
+		processingModalOpen,
+		processingModalTotal,
+		sourcePath
+	} from '../../../../lib/store';
 	import { request } from '@/utils';
 	import type { SuccessResponse } from '@/types/public';
 	import { toast } from '@zerodevx/svelte-toast';
@@ -13,6 +18,7 @@
 	import type { QueueLog, ResolvedInterface } from '@/types/yapi';
 	import Checkbox from '@smui/checkbox';
 	import Button from '@smui/button';
+	import { invoke } from '@tauri-apps/api';
 
 	const progress = tweened(0, {
 		duration: 400,
@@ -57,6 +63,22 @@
 		progress.set(0);
 		runningTask.update(() => false);
 	}
+
+	function onConfirm() {
+		for (let task of checkList) {
+			if (!task.checked) continue;
+			invoke('write_to_file', {
+				path: task.interface.path,
+				content: task.ts_string,
+				sourcePath: $sourcePath
+			}).catch((e) => {
+				toast.push(JSON.stringify(e), toastTheme.error);
+			});
+		}
+
+		toast.push('生成成功', toastTheme.success);
+		$processingModalOpen = false;
+	}
 </script>
 
 <Dialog
@@ -86,10 +108,10 @@
 				</div>
 			{/each}
 		</div>
-		<div style="width:100%;margin-top:12px;margin-bottom:12px">
-			<Button style="display:flex; justify-content:end">确定</Button>
-		</div>
 		<LinearProgress progress={$progress} />
+		<div style="width:100%;margin-top:12px;margin-bottom:12px">
+			<Button style="display:flex; justify-content:end" on:click={onConfirm}>确定</Button>
+		</div>
 	</Content>
 </Dialog>
 

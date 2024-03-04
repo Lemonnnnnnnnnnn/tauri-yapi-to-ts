@@ -1,6 +1,5 @@
 use std::{
     collections::VecDeque,
-    io,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
@@ -31,7 +30,6 @@ pub struct Queue {
     pub waiting_queue: Arc<Mutex<VecDeque<InterfaceFetchParams>>>,
     pub total_count: Arc<Mutex<usize>>,
     pub running: Arc<AtomicBool>,
-    pub result_queue: Arc<Mutex<ResultQueue>>,
     pub app_handle: Arc<Mutex<AppHandle>>,
 }
 
@@ -56,9 +54,6 @@ impl Queue {
             waiting_queue: Arc::new(Mutex::new(VecDeque::new())),
             running: Arc::new(AtomicBool::new(true)),
             total_count: Arc::new(Mutex::new(0)),
-            result_queue: Arc::new(Mutex::new(ResultQueue {
-                list: vec![],
-            })),
             app_handle: Arc::new(Mutex::new(app_handle.clone())),
         }
     }
@@ -68,6 +63,8 @@ impl Queue {
             .lock()
             .await
             .push_back(interface_fetch_params);
+
+        self.running.store(true,  Ordering::Release);
     }
 
     pub async fn cancel_execute(&self) {
@@ -75,9 +72,6 @@ impl Queue {
     }
 
     pub async fn clear(&self) {
-        *self.result_queue.lock().await = ResultQueue {
-            list: vec![],
-        };
         *self.total_count.lock().await = 0;
     }
 
@@ -93,7 +87,6 @@ impl Queue {
                 queue.pop_front()
             };
             let app_handle = Arc::clone(&self.app_handle);
-            let result_queue = Arc::clone(&self.result_queue);
             let sem = self.semaphore.clone();
 
             match interface_data {

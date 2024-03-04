@@ -6,7 +6,7 @@ use crate::{
         web_response::WebResponse,
         yapi::{interface::InterfaceFetchParams, queue::Queue},
     },
-    services::log::log_error,
+    services::{log::log_error, yapi::interface::write_content_to_interface_path},
 };
 
 #[tauri::command]
@@ -43,9 +43,25 @@ pub async fn start_task(app_handle: AppHandle) -> Result<WebResponse, String> {
 #[tauri::command]
 pub async fn cancel_task(app_handle: AppHandle) -> Result<WebResponse, String> {
     let queue: State<'_, Queue> = app_handle.state();
-    queue.cancel_execute();
+    queue.cancel_execute().await;
     Ok(WebResponse {
         data: None,
         message: "已停止跑批任务".to_string(),
     })
+}
+
+#[tauri::command]
+pub fn write_to_file(
+    path: String,
+    content: String,
+    source_path: &str,
+    app_handle: AppHandle,
+) -> Result<WebResponse, String> {
+    match write_content_to_interface_path(path, source_path, content) {
+        Err(e) => log_error(&app_handle, e.to_string()),
+        Ok(_) => Ok(WebResponse {
+            data: None,
+            message: "已写入文件".to_string(),
+        }),
+    }
 }

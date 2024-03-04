@@ -3,16 +3,10 @@ use std::io;
 use tauri::AppHandle;
 
 use crate::{
-    models::{
-        notification::NotificationDesc,
-        yapi::{
-            category::CategoryMenuItem, project::YapiProjectBaseInfo, web_response::YapiResponse,
-        },
+    models::yapi::{
+        category::CategoryMenuItem, project::YapiProjectBaseInfo, web_response::YapiResponse,
     },
-    services::{
-        notification::notification,
-        reqwest::{get_data, get_reqwest_client},
-    },
+    services::reqwest::{get_data, get_reqwest_client},
 };
 
 use super::config::get_project_config;
@@ -22,7 +16,7 @@ const CATEGORY_MENU_API: &str = "api/interface/getCatMenu";
 
 pub async fn fetch_project_base_info(
     token: String,
-    source_path: String,
+    source_path: &str,
     app_handle: &AppHandle,
 ) -> Result<YapiProjectBaseInfo, io::Error> {
     let project_config = get_project_config(source_path)?;
@@ -47,7 +41,7 @@ pub async fn fetch_project_base_info(
 pub async fn fetch_project_cat_menu(
     project_id: u32,
     token: String,
-    source_path: String,
+    source_path: &str,
     app_handle: &AppHandle,
 ) -> Result<Vec<CategoryMenuItem>, io::Error> {
     let client = get_reqwest_client(&app_handle)?;
@@ -57,12 +51,6 @@ pub async fn fetch_project_cat_menu(
         "{}{}?project_id={}&token={}",
         project_config.base_url, CATEGORY_MENU_API, project_id, token
     );
-
-    // notification(
-    //     &app_handle,
-    //     NotificationDesc::Success,
-    //     "正在获取分类列表...",
-    // );
 
     match get_data::<YapiResponse<Vec<CategoryMenuItem>>>(client, url).await {
         Ok(res) => Ok(res.data),

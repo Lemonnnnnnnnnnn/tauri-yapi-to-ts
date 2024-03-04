@@ -17,7 +17,7 @@ pub fn get_ts_string(
     get_root_ts(root)
 }
 
-fn get_root_ts(root: Root) -> String{
+fn get_root_ts(root: Root) -> String {
     let ts_name = get_ts_interface_name(&root.interface_name, &root.key);
     let header = format!("// {}\n", root.interface_desc);
     let mut res_string = String::from(header);

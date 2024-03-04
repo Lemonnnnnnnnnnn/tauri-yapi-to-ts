@@ -5,10 +5,7 @@ use std::{
 
 use serde_json::{from_str, json};
 
-use crate::{
-    models::yapi::config::YapiConfig,
-    services::conversion::string_to_path_buf,
-};
+use crate::{models::yapi::config::YapiConfig, services::conversion::string_to_path_buf};
 
 pub const PROJECT_CONFIG_NAME: &str = "yapi.json";
 
@@ -28,10 +25,10 @@ pub fn init_project_config(source_path: String) -> Result<(), io::Error> {
     Ok(())
 }
 
-pub fn get_project_config(source_path: String) -> Result<YapiConfig, io::Error> {
+pub fn get_project_config(source_path: &str) -> Result<YapiConfig, io::Error> {
     let mut file = OpenOptions::new()
         .read(true)
-        .open(string_to_path_buf(source_path).join(PROJECT_CONFIG_NAME))?;
+        .open(string_to_path_buf(source_path.to_string()).join(PROJECT_CONFIG_NAME))?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
     Ok(from_str(&contents)?)
