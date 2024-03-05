@@ -31,6 +31,8 @@ export interface CategoryType {
 export interface InterfaceType {
     id: string
     name?: string
+    path?: string
+    lock?: boolean
 }
 
 export interface SuccessResponse<T> {

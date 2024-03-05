@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import ConfigModal from './components/ConfigModal.svelte';
 	import ProjectTab from './components/ProjectTab/index.svelte';
 	import { invoke } from '@tauri-apps/api';
@@ -31,19 +30,6 @@
 				need_init = true;
 			});
 	}
-
-	// onMount(() => {
-	// 	invoke<SuccessResponse<Config>>('load_project', { sourcePath: $sourcePath })
-	// 		.then((res) => {
-	// 			toast.push(res.message, toastTheme.success);
-	// 			config = res.data;
-	// 			load_project = true;
-	// 		})
-	// 		.catch((e) => {
-	// 			toast.push(JSON.stringify(e), toastTheme.error);
-	// 			need_init = true;
-	// 		});
-	// });
 </script>
 
 {#if need_init}

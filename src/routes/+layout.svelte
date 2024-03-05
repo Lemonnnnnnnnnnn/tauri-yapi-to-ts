@@ -28,7 +28,6 @@
 
 		unlistenLoadProjectError = await listen<string>('load_project_error', (event) => {
 			toast.push(event.payload, toastTheme.error);
-			// todo: 请查看日志获取更多信息，日志地址xxx
 		});
 
 		unlistenNotification = await listen<{ message: string; desc: 'Success' | 'Error' }>(
