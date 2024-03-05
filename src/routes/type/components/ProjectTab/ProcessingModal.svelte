@@ -65,6 +65,10 @@
 	}
 
 	function onConfirm() {
+		const confirmed = confirm('操作将重新生成ts文件，请确保本地代码已经保存！');
+
+		if (!confirmed) return;
+
 		for (let task of checkList) {
 			if (!task.checked) continue;
 			invoke('write_to_file', {

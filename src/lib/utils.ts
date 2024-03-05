@@ -46,8 +46,6 @@ export function startTask(){
     invoke<SuccessResponse<number>>('start_task').then((res) => {
         toast.push(res.message, toastTheme.success);
         processingModalOpen.update(() => true);
-        console.log(res);
-        
         processingModalTotal.update(() => res.data);
     });
 

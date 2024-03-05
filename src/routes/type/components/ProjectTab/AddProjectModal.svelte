@@ -60,7 +60,7 @@
 
 			for await (let catMenu of menuList.data) {
 				toast.push(`正在获取分类${catMenu.name}下接口...`, toastTheme.success);
-				const categoryDataList = await invoke<SuccessResponse<CategoryDataList>>(
+				const interfaceList = await invoke<SuccessResponse<CategoryDataList>>(
 					'get_cat_interface_list',
 					{
 						token: form.token,
@@ -69,7 +69,7 @@
 					}
 				);
 
-				for await (let i of categoryDataList.data.list) {
+				for await (let i of interfaceList.data.list) {
 					await invoke('add_interface_task', {
 						data: {
 							token: form.token,
