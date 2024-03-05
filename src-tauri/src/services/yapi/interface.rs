@@ -91,7 +91,7 @@ pub fn write_content_to_interface_path(
 ) -> Result<(), io::Error> {
     let project_config = get_project_config(source_path)?;
     let path_arr = get_path_arr(path);
-    let mut file_path = PathBuf::from(source_path).join(project_config.types_path_relative);
+    let mut file_path = PathBuf::from(source_path).join(project_config.types_path);
 
     for p in path_arr {
         file_path.push(p);

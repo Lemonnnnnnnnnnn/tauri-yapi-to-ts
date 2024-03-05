@@ -4,9 +4,9 @@ use serde_json::{json, Value};
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct YapiConfig {
     pub base_url: String,
-    pub types_path_relative: String,
+    pub types_path: String,
     pub project_list: Vec<YapiProject>,
-    pub request_path_relative: String,
+    pub request_path: String,
     pub request_template: String,
     pub header_template: String,
     pub file_name_template: String,
@@ -17,9 +17,9 @@ impl Default for YapiConfig {
     fn default() -> Self {
         Self {
             base_url: String::new(),
-            types_path_relative: String::new(),
+            types_path: String::new(),
             project_list: Vec::new(),
-            request_path_relative: String::new(),
+            request_path: String::new(),
             request_template: String::new(),
             header_template: String::new(),
             file_name_template: String::new(),
@@ -43,11 +43,11 @@ impl YapiConfig {
         if let Some(base_url) = yapi_config_request.base_url {
             self.base_url = base_url;
         }
-        if let Some(types_path_relative) = yapi_config_request.types_path_relative {
-            self.types_path_relative = types_path_relative;
+        if let Some(types_path) = yapi_config_request.types_path {
+            self.types_path = types_path;
         }
-        if let Some(request_path_relative) = yapi_config_request.request_path_relative {
-            self.request_path_relative = request_path_relative;
+        if let Some(request_path) = yapi_config_request.request_path {
+            self.request_path = request_path;
         }
         if let Some(request_template) = yapi_config_request.request_template {
             self.request_template = request_template;
@@ -67,8 +67,8 @@ impl YapiConfig {
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct YapiConfigRequest {
     pub base_url: Option<String>,
-    pub types_path_relative: Option<String>,
-    pub request_path_relative: Option<String>,
+    pub types_path: Option<String>,
+    pub request_path: Option<String>,
     pub request_template: Option<String>,
     pub header_template: Option<String>,
     pub file_name_template: Option<String>,

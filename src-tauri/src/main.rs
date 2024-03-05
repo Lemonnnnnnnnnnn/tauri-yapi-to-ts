@@ -4,10 +4,7 @@
 use std::sync::Arc;
 
 use models::yapi::queue::Queue;
-use services::{
-    conversion::path_buf_to_string,
-    global_config::init_config,
-};
+use services::{conversion::path_buf_to_string, global_config::init_config};
 use structs::context::ContextGlobal;
 use tauri::{api::dialog, CustomMenuItem, Manager, Menu, MenuItem, Submenu};
 use tokio::sync::Mutex;
@@ -22,7 +19,7 @@ use crate::services::{
 };
 
 use crate::commands::{
-    global_config::{add_project, load_latest_project, update_config},
+    global_config::{add_project, load_global_config, load_latest_project, update_global_config},
     yapi::category::get_cat_interface_list,
     yapi::config::{load_project_config, update_project_config},
     yapi::interface::{add_interface_task, cancel_task, start_task, write_to_file},
@@ -115,7 +112,7 @@ fn main() {
         })
         .invoke_handler(tauri::generate_handler![
             read_config,
-            update_config,
+            update_global_config,
             // get_global_config,
             update_categories,
             update_interface,
@@ -135,7 +132,8 @@ fn main() {
             add_interface_task,
             start_task,
             cancel_task,
-            write_to_file
+            write_to_file,
+            load_global_config
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

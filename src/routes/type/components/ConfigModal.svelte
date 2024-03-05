@@ -14,7 +14,7 @@
 
 	let init_form: Config = {
 		base_url: '',
-		types_path_relative: 'src/types'
+		types_path: 'src/types'
 	};
 
 	$: form = init_form;
@@ -30,7 +30,7 @@
 			return;
 		}
 
-		if (!form.types_path_relative) {
+		if (!form.types_path) {
 			toast.push('请输入项目类型目录文件夹路径', toastTheme.error);
 			return;
 		}
@@ -63,7 +63,7 @@
 		<Textfield variant="outlined" bind:value={form.base_url} label="Yapi地址根路径"></Textfield>
 		<Textfield
 			variant="outlined"
-			bind:value={form.types_path_relative}
+			bind:value={form.types_path}
 			label="你想要把接口ts文件放到哪个文件夹下？"
 		></Textfield>
 	</Content>

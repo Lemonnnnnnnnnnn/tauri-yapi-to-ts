@@ -42,7 +42,7 @@
 			return;
 		}
 
-		request('update_config', form)
+		request('update_global_config', form)
 			// @ts-expect-error
 			.then((res: SuccessResponse<Config>) => {
 				toast.push(res.message, toastTheme.success);

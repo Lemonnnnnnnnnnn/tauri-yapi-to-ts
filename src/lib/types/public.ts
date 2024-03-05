@@ -1,13 +1,18 @@
 export interface Config {
     base_url?: string
-    types_path_relative?: string
+    types_path?: string
     project_list?: ProjectList[],
     request_path?: string,
     request_template?: string,
     header_template?: string
     file_name_template?: string
     type_import_template?: string
-    proxy?:string
+}
+
+export interface GlobalConfig {
+    proxy?: string
+    rate_limit?: number
+    break_seconds?: number
 }
 
 
@@ -34,7 +39,7 @@ export interface SuccessResponse<T> {
 }
 
 export interface QueueStatus {
-    total:number;
+    total: number;
     // success:number;
     // fail:number;
 }
