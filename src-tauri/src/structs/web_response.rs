@@ -22,12 +22,12 @@ pub struct CategoryMenuItem {
 pub struct CategoryDataList {
     pub count : u32,
     pub total : u32,
-    pub list : Vec<CategoryDataItem>
+    pub list : Vec<InterfaceDataItem>
 }
 
 // 分类详情
 #[derive(Debug, Deserialize, Serialize , Clone)]
-pub struct CategoryDataItem {
+pub struct InterfaceDataItem {
     pub _id : u32,
     pub catid : u32,
     pub title : String,

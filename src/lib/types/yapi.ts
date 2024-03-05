@@ -13,10 +13,10 @@ export type CategoryMenuList = {
 export type CategoryDataList = {
     count: number,
     total: number,
-    list: CategoryDataItem[]
+    list: InterfaceDataItem[]
 }
 
-export type CategoryDataItem = {
+export type InterfaceDataItem = {
     _id: number,
     catid: number,
     title: string,
