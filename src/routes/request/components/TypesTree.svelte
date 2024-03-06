@@ -8,6 +8,7 @@
 	import Button from '@smui/button';
 	import { confirm } from '@tauri-apps/api/dialog';
 	import Textfield from '@smui/textfield';
+	import { invoke } from '@tauri-apps/api';
 
 	let full_list: TypesTree[] = [];
 	let list: TypesTree[] = [];
@@ -18,9 +19,8 @@
 	});
 
 	function get_data() {
-		request('get_request_list')
-			// @ts-expect-error
-			.then((res: SuccessResponse<TypesTree[]>) => {
+		invoke<SuccessResponse<TypesTree[]>>('load_file_tree')
+			.then((res) => {
 				full_list = sort(res.data);
 				list = sort(res.data);
 				toast.push(JSON.stringify(res.message), toastTheme.success);
@@ -65,7 +65,6 @@
 		const full_path = list.map((item) => item.full_path);
 
 		request('update_request', { full_path })
-			// @ts-expect-error
 			.then((res: SuccessResponse<null>) => {
 				toast.push(JSON.stringify(res.message), toastTheme.success);
 			})
