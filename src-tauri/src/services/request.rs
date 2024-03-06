@@ -79,3 +79,126 @@ pub async fn update_request(
         data: None,
     })
 }
+
+//  ----------------------------
+
+// 获取 type 文件的相对路径
+fn get_type_relative_path(&self, path: &PathBuf) -> Option<PathBuf> {
+    let types_root_path = self.context.types_full_path.clone().unwrap();
+    match path == &types_root_path {
+        true => None,
+        false => Some(path.strip_prefix(&types_root_path).unwrap().to_path_buf()),
+    }
+}
+
+// 获取写入 service 文件的路径
+fn get_write_path(&self, sub_path: &Option<PathBuf>) -> PathBuf {
+    match &sub_path {
+        Some(sub_path) => {
+            let mut write_path = self.request_full_path.clone().unwrap().join(&sub_path);
+
+            if let Some(template) = self.file_name_template.clone() {
+                if let Some(file_name) = write_path.file_name() {
+                    let real_file_name = template.replace("$1", file_name.to_str().unwrap());
+                    write_path.set_file_name(real_file_name);
+                }
+            }
+
+            write_path
+        }
+        None => self.request_full_path.clone().unwrap().join("index"),
+    }
+}
+
+// 检查生成service的 type 文件是否有 Request/Response interface
+fn check_file(&self, file_path: &PathBuf, file_name_without_ext: &String) -> bool {
+    let req = format!("{}Request", get_legal_name(file_name_without_ext));
+    let resp = format!("{}Response", get_legal_name(file_name_without_ext));
+
+    if is_string_in_file(&file_path, &req) && is_string_in_file(&file_path, &resp) {
+        return true;
+    }
+    false
+}
+
+// 把import ts 定义字符串添加进import_list
+fn op_import_list(
+    type_import_template: String,
+    sub_path: &Option<PathBuf>,
+    file_name: &String,
+) -> Vec<String> {
+    let mut import_list = vec![];
+
+    let sub_path_unix = get_sub_path_unix(sub_path);
+
+    let import_string = type_import_template
+        .replace("$1", &format!("{}Request", get_legal_name(&file_name)))
+        .replace("$2", &format!("{}Response", get_legal_name(&file_name)))
+        .replace("$3", &format!("{}/{}", sub_path_unix, file_name))
+        + "\n";
+
+    import_list.push(import_string);
+
+    import_list
+}
+
+// 把export ts 定义字符串添加进export_list
+fn get_export_list(
+    request_template: String,
+    file_path: &PathBuf,
+    sub_path: &Option<PathBuf>,
+) -> Vec<String> {
+    let mut export_list = vec![];
+
+    let comment = get_comment(file_path.clone());
+
+    let sub_path_unix = get_sub_path_unix(sub_path);
+
+    let file_name = get_file_name_without_ext(&file_path);
+
+    let export_string = request_template
+        .replace("$1", &file_name)
+        .replace("$2", &format!("{}Request", get_legal_name(&file_name)))
+        .replace("$3", &format!("{}Response", get_legal_name(&file_name)))
+        .replace("$4", &format!("{}/{}", sub_path_unix.as_str(), &file_name))
+        + "\n";
+
+    let export_string_with_comment = format!("{}\n{}", comment, export_string);
+
+    export_list.push(export_string_with_comment);
+
+    export_list
+}
+
+fn get_sub_path_unix(sub_path: &Option<PathBuf>) -> String {
+    match sub_path {
+        Some(sub_path) => format!(
+            "/{}",
+            sub_path
+                .to_str()
+                .unwrap()
+                .replace("\\", "/")
+                .replace("//", "/")
+        ),
+        None => "".to_string(),
+    }
+}
+
+fn get_comment(ts_file: PathBuf) -> String {
+    let file = File::open(ts_file).unwrap();
+    let reader = BufReader::new(file);
+
+    let mut iteror = reader.lines().into_iter();
+    let first_line = iteror.next().unwrap().unwrap();
+
+    if first_line.starts_with("//") {
+        return first_line;
+    }
+
+    String::from("")
+}
+
+fn get_file_name_without_ext(file_path: &PathBuf) -> String {
+    let file_name_osstr = Path::file_stem(&file_path).unwrap();
+    file_name_osstr.to_os_string().into_string().unwrap()
+}
