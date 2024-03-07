@@ -28,7 +28,6 @@ pub struct ResolvedInterface {
 pub struct Queue {
     pub semaphore: Arc<Semaphore>,
     pub waiting_queue: Arc<Mutex<VecDeque<InterfaceFetchParams>>>,
-    pub total_count: Arc<Mutex<usize>>,
     pub running: Arc<AtomicBool>,
     pub app_handle: Arc<Mutex<AppHandle>>,
 }
@@ -52,8 +51,7 @@ impl Queue {
         Queue {
             semaphore: Arc::new(Semaphore::new(global_config.rate_limit)),
             waiting_queue: Arc::new(Mutex::new(VecDeque::new())),
-            running: Arc::new(AtomicBool::new(true)),
-            total_count: Arc::new(Mutex::new(0)),
+            running: Arc::new(AtomicBool::new(false)),
             app_handle: Arc::new(Mutex::new(app_handle.clone())),
         }
     }
@@ -64,15 +62,12 @@ impl Queue {
             .await
             .push_back(interface_fetch_params);
 
-        self.running.store(true,  Ordering::Release);
+        self.running.store(true, Ordering::Release);
     }
 
     pub async fn cancel_execute(&self) {
         self.running.store(false, Ordering::Relaxed);
-    }
-
-    pub async fn clear(&self) {
-        *self.total_count.lock().await = 0;
+        self.clear().await;
     }
 
     pub async fn start_execute(&self, app_handle: &AppHandle) {
@@ -128,6 +123,7 @@ impl Queue {
                         }
 
                         sleep(Duration::from_secs(global_config.break_seconds)).await;
+
                         // 补充一个令牌
                         sem.add_permits(1);
                     });
@@ -135,9 +131,15 @@ impl Queue {
                 None => {
                     self.running.store(false, Ordering::Relaxed);
                     self.clear().await;
+                    // 补充一个令牌
+                    sem.add_permits(1);
                 }
             }
         }
+    }
+
+    async fn clear(&self) {
+        self.waiting_queue.lock().await.clear();
     }
 
     async fn acquire(&self) {
