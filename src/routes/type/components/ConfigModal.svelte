@@ -41,8 +41,6 @@
 		})
 			.then((res) => {
 				toast.push(res.message, toastTheme.success);
-				// open = false;
-				// load_project = true;
 				loadProject();
 			})
 			.catch((e) => {

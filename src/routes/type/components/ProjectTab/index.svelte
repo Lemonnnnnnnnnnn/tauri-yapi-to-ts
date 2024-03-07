@@ -7,12 +7,12 @@
 	import AddProjectModal from './AddProjectModal.svelte';
 	import ProcessingModal from './ProcessingModal.svelte';
 	import Project from './Project.svelte';
+	import { config } from '@/store';
 
-	export let config: Config | undefined;
 	export let loadProject: () => void;
 	let openAddModal = false;
 
-	$: project_list = config?.project_list || [];
+	$: project_list = $config?.project_list || [];
 
 	let active: NonNullable<Config['project_list']>[number] = {
 		project_id: '',
