@@ -1,8 +1,8 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import type { SuccessResponse } from "./types/public";
+import type { Config, SuccessResponse } from "./types/public";
 import { toast } from "@zerodevx/svelte-toast";
 import { toastTheme } from "./consts";
-import { processingModalOpen, processingModalTotal } from "./store";
+import { config, processingModalOpen, processingModalTotal } from "./store";
 
 export function request(name: string, data?: Record<keyof any, any>): any {
     let json = JSON.stringify(data);
@@ -42,11 +42,22 @@ export function wop(node?: HTMLUListElement, params?: { duration?: number }) {
     };
 }
 
-export function startTask(){ 
+export function startTask() {
     invoke<SuccessResponse<number>>('start_task').then((res) => {
         toast.push(res.message, toastTheme.success);
         processingModalOpen.update(() => true);
         processingModalTotal.update(() => res.data);
     });
+}
 
+export function loadProject(sourcePath: string) {
+    return invoke<SuccessResponse<Config>>('load_project_config', { sourcePath })
+        .then((res) => {
+            toast.push(res.message, toastTheme.success);
+            config.set(res.data);
+            return res
+        })
+        .catch((e) => {
+            toast.push(JSON.stringify(e), toastTheme.error);
+        });
 }

@@ -7,6 +7,8 @@
 	import type { Config, SuccessResponse } from '@/types/public';
 	import Dialog, { Actions, Header, Content } from '@smui/dialog';
 	import Button, { Label } from '@smui/button';
+	import { sourcePath } from '@/store';
+	import { invoke } from '@tauri-apps/api';
 
 	export let open: boolean;
 	export let load_types: boolean;
@@ -42,9 +44,11 @@
 			return;
 		}
 
-		request('update_global_config', form)
-			// @ts-expect-error
-			.then((res: SuccessResponse<Config>) => {
+		invoke<SuccessResponse<String>>('update_project_config', {
+			sourcePath: $sourcePath,
+			data: form
+		})
+			.then((res) => {
 				toast.push(res.message, toastTheme.success);
 				open = false;
 				load_types = true;
@@ -109,20 +113,6 @@
 		</Button>
 	</div>
 </Dialog>
-
-<!-- <Modal
-	bind:open
-	modalHeading="初始化配置"
-	preventCloseOnClickOutside
-	primaryButtonText="提交"
-	secondaryButtonText="取消"
-	on:click:button--secondary={() => {
-		open = false;
-	}}
-	on:submit={on_submit}
->
-	
-</Modal> -->
 
 <style>
 </style>

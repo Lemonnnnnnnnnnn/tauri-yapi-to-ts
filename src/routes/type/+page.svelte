@@ -2,7 +2,7 @@
 	import ConfigModal from './components/ConfigModal.svelte';
 	import ProjectTab from './components/ProjectTab/index.svelte';
 	import { sourcePath  } from '@/store';
-	import { loadProject as _loadProject } from '@/store';
+	import { loadProject as _loadProject } from '@/utils';
 
 	let need_init = false;
 	let load_project = false;

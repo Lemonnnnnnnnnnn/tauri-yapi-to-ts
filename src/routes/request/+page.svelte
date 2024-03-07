@@ -1,24 +1,18 @@
 <script lang="ts">
-	import type { SuccessResponse } from '@/types/public';
-	import { request } from '@/utils';
 	import { onMount } from 'svelte';
 	import ConfigModal from './components/ConfigModal.svelte';
-	import { toastTheme } from '@/consts';
-	import { toast } from '@zerodevx/svelte-toast';
 	import TypesTree from './components/TypesTree.svelte';
+	import { config } from '@/store';
 
 	let need_init = false;
 	let load_types = false;
 
 	onMount(() => {
-		request('check_request_config')
-			.then((res: SuccessResponse<null>) => {
-				load_types = true;
-			})
-			.catch((e) => {
-				toast.push(JSON.stringify(e), toastTheme.error);
-				need_init = true;
-			});
+		if (!$config.request_path) {
+			need_init = true;
+		} else {
+			load_types = true;
+		}
 	});
 </script>
 

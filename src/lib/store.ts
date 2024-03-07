@@ -19,14 +19,3 @@ export let config = writable<Config>({
     type_import_template: "",
 })
 
-export function loadProject(sourcePath: string) {
-    return invoke<SuccessResponse<Config>>('load_project_config', { sourcePath })
-        .then((res) => {
-            toast.push(res.message, toastTheme.success);
-            config.set(res.data);
-            return res
-        })
-        .catch((e) => {
-            toast.push(JSON.stringify(e), toastTheme.error);
-        });
-}

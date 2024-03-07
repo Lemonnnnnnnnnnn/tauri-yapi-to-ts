@@ -9,6 +9,7 @@
 	import { confirm } from '@tauri-apps/api/dialog';
 	import Textfield from '@smui/textfield';
 	import { invoke } from '@tauri-apps/api';
+	import { sourcePath } from '@/store';
 
 	let full_list: TypesTree[] = [];
 	let list: TypesTree[] = [];
@@ -19,7 +20,7 @@
 	});
 
 	function get_data() {
-		invoke<SuccessResponse<TypesTree[]>>('load_file_tree')
+		invoke<SuccessResponse<TypesTree[]>>('load_file_tree', { sourcePath: $sourcePath })
 			.then((res) => {
 				full_list = sort(res.data);
 				list = sort(res.data);
@@ -97,16 +98,19 @@
 			<Button on:click={update_service}>更新所有请求</Button>
 		</div>
 		<div class="flex items-center" style="margin-top:10px;margin-bottom:10px">
-			<Textfield style="flex:1" variant="outlined" bind:value={searchKey} label="搜索"></Textfield>
-			<Button style="height:56px" color="secondary" variant="raised" on:click={filter_data}
-				>搜索</Button
-			>
+			<Textfield
+				style="flex:1"
+				variant="outlined"
+				bind:value={searchKey}
+				label="搜索"
+				on:input={filter_data}
+			></Textfield>
 		</div>
 	</div>
 
-	<div style="flex:1; overflow:auto">
+	<div style="flex:1; overflow:auto;display:flex;flex-direction:column;gap:12px">
 		{#each list as item}
-			<Node {...item} expanded={true} />
+			<Node {...item} expanded={false} />
 		{/each}
 	</div>
 </main>
