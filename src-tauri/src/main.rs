@@ -24,7 +24,7 @@ use crate::commands::{
     yapi::config::{load_project_config, update_project_config},
     yapi::interface::{add_interface_task, cancel_task, start_task, write_to_file},
     yapi::project::{get_yapi_project_base_info, get_yapi_project_cat_menu},
-    yapi::request::load_file_tree,
+    yapi::request::{get_request_string, load_file_tree, write_request_to_file},
 };
 
 pub mod commands;
@@ -135,7 +135,9 @@ fn main() {
             cancel_task,
             write_to_file,
             load_global_config,
-            load_file_tree
+            load_file_tree,
+            get_request_string,
+            write_request_to_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

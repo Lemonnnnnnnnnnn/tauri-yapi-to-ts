@@ -1,12 +1,8 @@
 import { writable } from "svelte/store";
-import type { Config, SuccessResponse } from "./types/public";
-import { invoke } from "@tauri-apps/api";
-import { toast } from "@zerodevx/svelte-toast";
-import { toastTheme } from "./consts";
+import type { Config } from "./types/public";
 
 export let processingModalOpen = writable(false);
 export let processingModalTotal = writable(0);
-export let runningTask = writable(false)
 export let sourcePath = writable("")
 export let config = writable<Config>({
     base_url: "",

@@ -1,63 +1,64 @@
 <script lang="ts">
-	import { toastTheme } from '@/consts';
-	import type { SuccessResponse, TypesTree } from '@/types/public';
-	import { request, wop } from '@/utils';
-	import { toast } from '@zerodevx/svelte-toast';
-	import { confirm } from '@tauri-apps/api/dialog';
+	import type { TypesTree } from '@/types/public';
+	import { wop } from '@/utils';
+	import Tooltip, { Wrapper } from '@smui/tooltip';
 
 	export let expanded = false;
-	export let name: string;
-	export let children: TypesTree[];
-	export let full_path: string;
 	export let level = 1;
+	export let data: TypesTree;
+	export let update_request_recursive: (node?: TypesTree) => any;
+	export let update_request: (node?: TypesTree) => any;
 
 	function toggle() {
-		if (children.length == 0) {
+		if (data.children.length == 0) {
 			return;
 		}
 		expanded = !expanded;
 	}
 
-	async function update_service(full_path: string) {
-		const confirmed = await confirm('操作将重新生成ts文件，请确保本地代码已经保存！');
-
-		if (!confirmed) return;
-
-		request('update_request', { full_path: [full_path] })
-			// @ts-expect-error
-			.then((res: SuccessResponse<null>) => {
-				toast.push(JSON.stringify(res.message), toastTheme.success);
-			})
-			.catch((e) => {
-				toast.push(JSON.stringify(e), toastTheme.error);
-			});
-	}
 </script>
 
 <div class:wrapper={level == 2}>
 	<div class="flex-inline items-end">
 		<button class="flex-inline items-end" on:click={toggle}>
-			{#if children.length}
+			{#if data.children.length}
 				<img class="icon" src="/directory.svg" alt="directory" />
 			{:else}
 				<img class="icon" src="/file.svg" alt="file" />
 			{/if}
 			<button class="node" class:expanded>{name}</button>
 		</button>
-		{#if children.length}
+		{#if data.children.length}
 			<button
 				class="flex-inline items-end"
 				style="margin-left:1em"
-				on:click={() => update_service(full_path)}
+				on:click={() => update_request(data)}
 			>
-				<img class="icon" src="/update.svg" alt="更新类型对应的 Service" />
+				<Wrapper>
+					<img class="icon" src="/update.svg" alt="生成该文件夹下的 type 文件对应的 request" />
+					<Tooltip>生成该文件夹下的 type 文件对应的 request</Tooltip>
+				</Wrapper>
+			</button>
+			<button
+				class="flex-inline items-end"
+				style="margin-left:1em"
+				on:click={() => update_request_recursive(data)}
+			>
+				<Wrapper>
+					<img
+						class="icon"
+						src="/full_update.svg"
+						alt="递归生成该文件夹下的 type 文件对应的 request"
+					/>
+					<Tooltip>递归生成该文件夹下的 type 文件对应的 request</Tooltip>
+				</Wrapper>
 			</button>
 		{/if}
 	</div>
 
 	{#if expanded}
 		<ul transition:wop>
-			{#each children as child}
+			{#each data.children as child}
 				<li>
 					<svelte:self {...child} level={level + 1} />
 				</li>

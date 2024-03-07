@@ -8,6 +8,7 @@
 	import Tooltip, { Wrapper } from '@smui/tooltip';
 	import { invoke } from '@tauri-apps/api';
 	import type { CategoryDataList } from '@/types/yapi';
+	import { startTask } from '@/utils';
 
 	export let data: CategoryType;
 	export let token: string;
@@ -39,6 +40,8 @@
 					}
 				});
 			}
+
+			startTask();
 		} catch (e) {
 			toast.push(JSON.stringify(e), toastTheme.error);
 		}

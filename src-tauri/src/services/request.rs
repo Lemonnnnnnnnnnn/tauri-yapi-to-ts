@@ -217,7 +217,7 @@ fn get_type_relative_path(source_path: &str, type_path: String, path: &PathBuf) 
     }
 }
 
-// 获取写入 service 文件的路径
+// 获取写入 request 文件的路径
 fn get_write_path(
     request_path: String,
     source_path: &str,
@@ -240,7 +240,7 @@ fn get_write_path(
     }
 }
 
-// 检查生成service的 type 文件是否有 Request/Response interface
+// 检查用于生成 request 的 type 文件是否有 Request/Response interface
 fn check_file(file_path: &PathBuf, file_name_without_ext: &String) -> bool {
     let req = format!("{}Request", get_legal_name(file_name_without_ext));
     let resp = format!("{}Response", get_legal_name(file_name_without_ext));

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { toastTheme } from '@/consts';
-	import type { SuccessResponse, TypesTree } from '@/types/public';
-	import { request } from '@/utils';
+	import type { RequestString, SuccessResponse, TypesTree } from '@/types/public';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
 	import Node from './Node.svelte';
@@ -9,11 +8,14 @@
 	import { confirm } from '@tauri-apps/api/dialog';
 	import Textfield from '@smui/textfield';
 	import { invoke } from '@tauri-apps/api';
-	import { sourcePath } from '@/store';
+	import { config, sourcePath } from '@/store';
+	import CheckListModal from './CheckListModal.svelte';
 
 	let full_list: TypesTree[] = [];
-	let list: TypesTree[] = [];
+	let filtered_list: TypesTree[] = [];
+	let over_list: RequestString[] = [];
 	let searchKey = '';
+	let check_list_modal_open = false;
 
 	onMount(() => {
 		get_data();
@@ -23,7 +25,7 @@
 		invoke<SuccessResponse<TypesTree[]>>('load_file_tree', { sourcePath: $sourcePath })
 			.then((res) => {
 				full_list = sort(res.data);
-				list = sort(res.data);
+				filtered_list = sort(res.data);
 				toast.push(JSON.stringify(res.message), toastTheme.success);
 			})
 			.catch((e) => {
@@ -33,11 +35,11 @@
 
 	function filter_data() {
 		if (searchKey === '') {
-			list = full_list;
+			filtered_list = full_list;
 			return;
 		}
 
-		list = do_filter(full_list);
+		filtered_list = do_filter(full_list);
 
 		function do_filter(list: TypesTree[]) {
 			return list.filter((item) => {
@@ -58,30 +60,14 @@
 		}
 	}
 
-	async function update_service() {
-		const confirmed = await confirm('操作将重新生成ts文件，请确保本地代码已经保存！');
-
-		if (!confirmed) return;
-
-		const full_path = list.map((item) => item.full_path);
-
-		request('update_request', { full_path })
-			.then((res: SuccessResponse<null>) => {
-				toast.push(JSON.stringify(res.message), toastTheme.success);
-			})
-			.catch((e) => {
-				toast.push(JSON.stringify(e), toastTheme.error);
-			});
-	}
-
 	function sort(list: TypesTree[]) {
+		list.sort((a, b) => {
+			if (a.children.length) {
+				return 1;
+			}
+			return -1;
+		});
 		list.forEach((item) => {
-			item.children.sort((a, b) => {
-				if (a.children.length) {
-					return -1;
-				}
-				return 0;
-			});
 			if (item.children.length) {
 				sort(item.children);
 			}
@@ -89,13 +75,61 @@
 
 		return list;
 	}
+
+	async function update_request(node?: TypesTree) {
+		if (node) {
+			await fetch(node.full_path || '');
+			check_list_modal_open = true;
+		} else {
+			await fetch($config.types_path || '');
+			check_list_modal_open = true;
+		}
+	}
+
+	async function update_request_recursive(node?: TypesTree) {
+		if (node) {
+			await fetch(node.full_path || '');
+			if (node.children) {
+				for (let subNode of node.children) {
+					await update_request_recursive(subNode);
+				}
+			}
+
+			check_list_modal_open = true;
+		} else {
+			await fetch($config.types_path || '');
+			for (let subNode of full_list) {
+				await update_request_recursive(subNode);
+			}
+			check_list_modal_open = true;
+		}
+	}
+
+	async function fetch(path: string) {
+		return invoke<string>('get_request_string', { sourcePath: $sourcePath, path })
+			.then((res) => {
+				over_list.push({
+					name: 'root.ts',
+					content: res,
+					full_path: path,
+					checked: true
+				});
+			})
+			.catch((e) => {
+				toast.push(JSON.stringify(e), toastTheme.error);
+			});
+	}
 </script>
 
+<CheckListModal bind:open={check_list_modal_open} bind:checkList={over_list} />
 <main style="height:95%;display:flex ; flex-direction:column">
 	<div>
 		<div class="flex justify-between items-center">
-			<div class="header">对应的接口树：</div>
-			<Button on:click={update_service}>更新所有请求</Button>
+			<div class="header">根据文件夹架构生成request：</div>
+			<div>
+				<Button on:click={() => update_request()}>更新根节点请求</Button>
+				<Button on:click={() => update_request_recursive()}>递归更新所有请求</Button>
+			</div>
 		</div>
 		<div class="flex items-center" style="margin-top:10px;margin-bottom:10px">
 			<Textfield
@@ -109,8 +143,8 @@
 	</div>
 
 	<div style="flex:1; overflow:auto;display:flex;flex-direction:column;gap:12px">
-		{#each list as item}
-			<Node {...item} expanded={false} />
+		{#each filtered_list as item}
+			<Node data={item} expanded={false} {update_request} {update_request_recursive} />
 		{/each}
 	</div>
 </main>

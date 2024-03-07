@@ -1,0 +1,79 @@
+<script lang="ts">
+	import Dialog, { Title, Content, Header } from '@smui/dialog';
+	import type { RequestString } from '@/types/public';
+	import { tweened } from 'svelte/motion';
+	import { cubicOut } from 'svelte/easing';
+	import LinearProgress from '@smui/linear-progress';
+	import Checkbox from '@smui/checkbox';
+	import Button from '@smui/button';
+	import { invoke } from '@tauri-apps/api';
+	import { toast } from '@zerodevx/svelte-toast';
+	import { toastTheme } from '@/consts';
+	import { sourcePath } from '@/store';
+
+	const progress = tweened(0, {
+		duration: 400,
+		easing: cubicOut
+	});
+
+	export let open = false;
+
+	export let checkList: RequestString[] = [];
+
+	function onClose() {
+		checkList = [];
+		open = false;
+	}
+
+	function onConfirm() {
+		const confirmed = confirm('操作将重新生成文件，请确保本地代码已经保存！');
+
+		if (!confirmed) return;
+
+		for (let task of checkList) {
+			if (!task.checked) continue;
+			invoke('write_request_to_file', {
+				path: task.full_path,
+				content: task.content,
+				sourcePath: $sourcePath
+			}).catch((e) => {
+				toast.push(JSON.stringify(e), toastTheme.error);
+			});
+		}
+
+		toast.push('生成成功', toastTheme.success);
+		open = false;
+	}
+</script>
+
+<Dialog
+	bind:open
+	fullscreen
+	aria-labelledby="simple-title"
+	aria-describedby="simple-content"
+	on:SMUIDialog:closed={onClose}
+>
+	<Header>
+		<Title id="fullscreen-title">日志</Title>
+		<button style="background:#fff;" on:click={() => (open = false)}>&#x2715;</button>
+	</Header>
+	<Content id="fullscreen-content">
+		<div>请勾选想要生成 ts 类型的接口：</div>
+		<div style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:12px">
+			{#each checkList as log}
+				<div style="display:flex; gap:6px; align-items:center">
+					<Checkbox checked={log.checked} />
+					<span>{log.name}</span>
+					<span>{log.full_path}</span>
+				</div>
+			{/each}
+		</div>
+		<LinearProgress progress={$progress} />
+		<div style="width:100%;margin-top:12px;margin-bottom:12px">
+			<Button style="display:flex; justify-content:end" on:click={onConfirm}>确定</Button>
+		</div>
+	</Content>
+</Dialog>
+
+<style>
+</style>

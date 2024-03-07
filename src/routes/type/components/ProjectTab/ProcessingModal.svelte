@@ -3,7 +3,6 @@
 	import Dialog, { Title, Content, Header } from '@smui/dialog';
 	import { onDestroy, onMount } from 'svelte';
 	import {
-		runningTask,
 		processingModalOpen,
 		processingModalTotal,
 		sourcePath
@@ -61,11 +60,10 @@
 		checkList = [];
 		$processingModalTotal = 0;
 		progress.set(0);
-		runningTask.update(() => false);
 	}
 
 	function onConfirm() {
-		const confirmed = confirm('操作将重新生成ts文件，请确保本地代码已经保存！');
+		const confirmed = confirm('操作将重新生成文件，请确保本地代码已经保存！');
 
 		if (!confirmed) return;
 

@@ -51,3 +51,10 @@ export interface TypesTree {
     name: string
     children: TypesTree[]
 }
+
+export interface RequestString {
+    full_path: string
+    name: string
+    content: string
+    checked: boolean
+}
