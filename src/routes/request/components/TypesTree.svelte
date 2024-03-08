@@ -106,11 +106,11 @@
 	}
 
 	async function fetch(path: string, name: string) {
-		return invoke<string>('get_request_string', { sourcePath: $sourcePath, path })
+		return invoke<SuccessResponse<string>>('get_request_string', { sourcePath: $sourcePath, path })
 			.then((res) => {
 				over_list.push({
 					name,
-					content: res,
+					content: res.data,
 					full_path: path,
 					checked: true
 				});

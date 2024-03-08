@@ -37,6 +37,7 @@
 
 		toast.push('生成成功', toastTheme.success);
 		open = false;
+		checkList = []
 	}
 </script>
 
