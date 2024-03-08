@@ -15,7 +15,6 @@
 		}
 		expanded = !expanded;
 	}
-
 </script>
 
 <div class:wrapper={level == 2}>
@@ -60,7 +59,7 @@
 		<ul transition:wop>
 			{#each data.children as child}
 				<li>
-					<svelte:self {...child} level={level + 1} />
+					<svelte:self data={child} {update_request_recursive} {update_request} level={level + 1} />
 				</li>
 			{/each}
 		</ul>
