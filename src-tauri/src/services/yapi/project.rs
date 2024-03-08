@@ -19,7 +19,10 @@ pub async fn fetch_project_base_info(
     source_path: &str,
     app_handle: &AppHandle,
 ) -> Result<YapiProjectBaseInfo, io::Error> {
-    let project_config = get_project_config(source_path)?;
+    let mut project_config = get_project_config(source_path)?;
+    if !project_config.base_url.ends_with('/') {
+        project_config.base_url.push('/');
+    }
 
     let url = format!(
         "{}{}?token={}",

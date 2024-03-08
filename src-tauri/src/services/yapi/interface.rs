@@ -26,7 +26,10 @@ pub async fn fetch_interface_detail(
     app_handle: &AppHandle,
 ) -> Result<InterfaceData, io::Error> {
     let client = get_reqwest_client(&app_handle)?;
-    let project_config = get_project_config(&fetch_interface_params.source_path)?;
+    let mut project_config = get_project_config(&fetch_interface_params.source_path)?;
+    if !project_config.base_url.ends_with('/') {
+        project_config.base_url.push('/');
+    }
 
     let url = format!(
         "{}{}?token={}&id={}",

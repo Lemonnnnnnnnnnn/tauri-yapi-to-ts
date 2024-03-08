@@ -23,7 +23,7 @@
 				{
 					token,
 					sourcePath: $sourcePath,
-					catId: id
+					catId: Number(id)
 				}
 			);
 
