@@ -13,7 +13,7 @@
 			data: {
 				token,
 				source_path: $sourcePath,
-				interface_id: id
+				interface_id: Number(id)
 			}
 		});
 		startTask();
