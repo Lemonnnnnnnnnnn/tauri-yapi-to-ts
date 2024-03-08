@@ -19,7 +19,6 @@ use crate::commands::{
 pub mod commands;
 pub mod models;
 pub mod services;
-pub mod utils;
 
 fn main() {
     let add = CustomMenuItem::new("add".to_string(), "添加代码库");
@@ -86,7 +85,7 @@ fn main() {
             load_file_tree,
             get_request_string,
             write_request_to_file,
-            get_interface_detail
+            get_interface_detail,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -7,7 +7,6 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { sourcePath } from '@/store';
 	import { invoke } from '@tauri-apps/api';
-	import { appLogDir } from '@tauri-apps/api/path';
 
 	let initProjectConfig: Config = {
 		base_url: '',
@@ -24,8 +23,6 @@
 		rate_limit: 5,
 		break_seconds: 1
 	};
-	let appLogDirPath = ''
-
 	let projectConfig = initProjectConfig;
 	let globalConfig = initGlobalConfig;
 
@@ -39,19 +36,12 @@
 				projectConfig = res.data;
 			}
 		);
-
-		appLogDir().then(res => { 
-			appLogDirPath = res
-		});
 	});
 
-	onDestroy(()=> { 
-		update_project_config()
-		update_global_config()
-		console.log(projectConfig);
-		console.log(globalConfig);
-		
-	})
+	onDestroy(() => {
+		update_project_config();
+		update_global_config();
+	});
 
 	function update_project_config() {
 		invoke<SuccessResponse<String>>('update_project_config', {
@@ -80,7 +70,6 @@
 			variant="outlined"
 			bind:value={projectConfig.base_url}
 			label="Yapi地址根路径"
-			
 		></Textfield>
 	</div>
 	<div>
@@ -89,7 +78,6 @@
 			variant="outlined"
 			bind:value={projectConfig.types_path}
 			label="你想要把接口ts文件放到哪个文件夹下？"
-			
 		></Textfield>
 	</div>
 	<div>
@@ -99,7 +87,6 @@
 			variant="outlined"
 			bind:value={globalConfig.rate_limit}
 			label="请求yapi-openapi最大并行请求数"
-
 		></Textfield>
 	</div>
 	<div>
@@ -109,7 +96,6 @@
 			variant="outlined"
 			bind:value={globalConfig.break_seconds}
 			label="请求yapi-openapi时间间隔"
-
 		></Textfield>
 	</div>
 	<div>
@@ -118,7 +104,6 @@
 			variant="outlined"
 			bind:value={projectConfig.request_path}
 			label="你想要把定义 request 的 ts 文件放到哪个文件夹下？"
-			
 		></Textfield>
 	</div>
 
@@ -166,7 +151,6 @@
 			variant="outlined"
 			bind:value={projectConfig.header_template}
 			label="请求文件首部字符串"
-			
 		></Textfield>
 	</div>
 
@@ -194,11 +178,9 @@
 			variant="outlined"
 			bind:value={globalConfig.proxy}
 			label="代理地址"
-
 		></Textfield>
 	</div>
 
-	{appLogDirPath}
 </main>
 
 <style>

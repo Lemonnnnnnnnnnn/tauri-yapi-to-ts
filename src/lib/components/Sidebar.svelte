@@ -16,6 +16,11 @@
 			key: '3',
 			label: 'Config',
 			url: '/config'
+		},
+		{
+			key: '4',
+			label: 'Ohter',
+			url: '/other'
 		}
 	];
 

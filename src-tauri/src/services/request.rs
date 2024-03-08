@@ -7,7 +7,6 @@ use std::{
 use crate::models::file::FileTree;
 
 use super::yapi::{config::get_project_config, resolver::common::get_legal_name};
-//  ----------------------------
 
 pub fn get_file_tree(
     source_path: &str,
