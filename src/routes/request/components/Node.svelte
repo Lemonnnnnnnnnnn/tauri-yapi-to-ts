@@ -26,7 +26,7 @@
 			{:else}
 				<img class="icon" src="/file.svg" alt="file" />
 			{/if}
-			<button class="node" class:expanded>{name}</button>
+			<button class="node" class:expanded>{data.name}</button>
 		</button>
 		{#if data.children.length}
 			<button
