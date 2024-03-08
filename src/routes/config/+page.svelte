@@ -4,10 +4,10 @@
 	import { toast } from '@zerodevx/svelte-toast';
 	import Tooltip, { Wrapper } from '@smui/tooltip';
 	import Textfield from '@smui/textfield';
-
 	import { onMount } from 'svelte';
 	import { sourcePath } from '@/store';
 	import { invoke } from '@tauri-apps/api';
+	import { appLogDir } from '@tauri-apps/api/path';
 
 	let initProjectConfig: Config = {
 		base_url: '',
@@ -24,6 +24,7 @@
 		rate_limit: 5,
 		break_seconds: 1
 	};
+	let appLogDirPath = ''
 
 	let projectConfig = initProjectConfig;
 	let globalConfig = initGlobalConfig;
@@ -41,6 +42,10 @@
 				projectConfig = res.data;
 			}
 		);
+
+		appLogDir().then(res => { 
+			appLogDirPath = res
+		});
 	});
 
 	function update_project_config() {
@@ -201,6 +206,8 @@
 			}}
 		></Textfield>
 	</div>
+
+	{appLogDirPath}
 </main>
 
 <style>
