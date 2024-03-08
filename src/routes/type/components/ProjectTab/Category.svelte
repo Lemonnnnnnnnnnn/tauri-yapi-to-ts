@@ -8,7 +8,7 @@
 	import Tooltip, { Wrapper } from '@smui/tooltip';
 	import { invoke } from '@tauri-apps/api';
 	import type { CategoryDataList } from '@/types/yapi';
-	import { startTask } from '@/utils';
+	import { loadConfig, startTask } from '@/utils';
 
 	export let data: CategoryType;
 	export let token: string;
@@ -26,6 +26,7 @@
 					catId: Number(id)
 				}
 			);
+			loadConfig($sourcePath)
 
 			for await (let i of interfaceList.data.list) {
 				if (!is_full_update) {
@@ -42,6 +43,7 @@
 			}
 
 			startTask();
+			
 		} catch (e) {
 			toast.push(JSON.stringify(e), toastTheme.error);
 		}
