@@ -142,7 +142,9 @@
 		</div>
 	</div>
 
-	<div style="flex:1; overflow:auto;display:flex;flex-direction:column;gap:12px">
+	<div
+		style="flex:1; overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:12px"
+	>
 		{#each filtered_list as item}
 			<Node data={item} expanded={false} {update_request} {update_request_recursive} />
 		{/each}
