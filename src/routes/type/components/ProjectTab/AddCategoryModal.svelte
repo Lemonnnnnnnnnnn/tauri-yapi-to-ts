@@ -27,7 +27,7 @@
 		}
 
 		try {
-			toast.push('正在更新分类基本信息...', toastTheme.success);
+			toast.push('正在更新分类元数据...', toastTheme.success);
 			await invoke<SuccessResponse<CategoryMenuList>>(
 				'get_yapi_project_cat_menu',
 				{
@@ -46,6 +46,7 @@
 					catId: Number(form.cat_id)
 				}
 			);
+			loadConfig($sourcePath)
 
 			for await (let i of interfaceList.data.list) {
 				await invoke('add_interface_task', {
@@ -56,7 +57,6 @@
 					}
 				});
 			}
-			loadConfig($sourcePath)
 			startTask();
 			open = false;
 		} catch (e) {

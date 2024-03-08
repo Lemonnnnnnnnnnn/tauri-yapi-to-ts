@@ -53,7 +53,7 @@
 	token={active.token}
 	projectId={active.project_id}
 />
-<AddInterfaceModal {loadProject} bind:open={openAddInterfaceModal} {project_list} />
+<AddInterfaceModal token={active.token} categories={active.categories} bind:open={openAddInterfaceModal} />
 
 <div style="height:95vh; display:flex; flex-direction:column; overflow:auto">
 	<div>

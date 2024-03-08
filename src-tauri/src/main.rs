@@ -9,7 +9,9 @@ use crate::commands::{
     global_config::{add_project, load_global_config, load_latest_project, update_global_config},
     yapi::category::get_cat_interface_list,
     yapi::config::{load_project_config, update_project_config},
-    yapi::interface::{add_interface_task, cancel_task, start_task, write_to_file},
+    yapi::interface::{
+        add_interface_task, cancel_task, get_interface_detail, start_task, write_to_file,
+    },
     yapi::project::{get_yapi_project_base_info, get_yapi_project_cat_menu},
     yapi::request::{get_request_string, load_file_tree, write_request_to_file},
 };
@@ -83,7 +85,8 @@ fn main() {
             load_global_config,
             load_file_tree,
             get_request_string,
-            write_request_to_file
+            write_request_to_file,
+            get_interface_detail
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -21,6 +21,7 @@ export type InterfaceDataItem = {
     catid: number,
     title: string,
     path: string,
+    project_id?: number;
 }
 
 export type QueueLog = {
