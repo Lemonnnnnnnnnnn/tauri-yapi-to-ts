@@ -1,11 +1,10 @@
 <script lang="ts">
 	import Textfield from '@smui/textfield';
 	import Tooltip, { Title, Wrapper } from '@smui/tooltip';
-	import { request } from '@/utils';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
 	import type { Config, SuccessResponse } from '@/types/public';
-	import Dialog, { Actions, Header, Content } from '@smui/dialog';
+	import Dialog, { Header, Content } from '@smui/dialog';
 	import Button, { Label } from '@smui/button';
 	import { sourcePath } from '@/store';
 	import { invoke } from '@tauri-apps/api';

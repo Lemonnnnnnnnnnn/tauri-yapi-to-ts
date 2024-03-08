@@ -4,20 +4,6 @@ import { toast } from "@zerodevx/svelte-toast";
 import { toastTheme } from "./consts";
 import { config, processingModalOpen, processingModalTotal } from "./store";
 
-export function request(name: string, data?: Record<keyof any, any>): any {
-    let json = JSON.stringify(data);
-    return invoke(name, { data: json });
-}
-
-export function isEmpty(obj: Record<keyof any, any>) {
-    for (const prop in obj) {
-        if (Object.hasOwn(obj, prop)) {
-            return false;
-        }
-    }
-
-    return true;
-}
 
 function getComputedStyle(node?: HTMLUListElement) {
     return {

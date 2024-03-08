@@ -2,12 +2,7 @@
 	import { listen } from '@tauri-apps/api/event';
 	import Dialog, { Title, Content, Header } from '@smui/dialog';
 	import { onDestroy, onMount } from 'svelte';
-	import {
-		processingModalOpen,
-		processingModalTotal,
-		sourcePath
-	} from '../../../../lib/store';
-	import { request } from '@/utils';
+	import { processingModalOpen, processingModalTotal, sourcePath } from '../../../../lib/store';
 	import type { SuccessResponse } from '@/types/public';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
@@ -47,8 +42,8 @@
 		const over = checkList.length === $processingModalTotal;
 
 		if (!over) {
-			request('cancel_task')
-				.then((res: SuccessResponse<null>) => {
+			invoke<SuccessResponse<null>>('cancel_task')
+				.then((res) => {
 					toast.push(JSON.stringify(res.message), toastTheme.success);
 					$processingModalOpen = false;
 				})
