@@ -3,18 +3,12 @@
 	import type { RequestString } from '@/types/public';
 	import { tweened } from 'svelte/motion';
 	import { cubicOut } from 'svelte/easing';
-	import LinearProgress from '@smui/linear-progress';
 	import Checkbox from '@smui/checkbox';
 	import Button from '@smui/button';
 	import { invoke } from '@tauri-apps/api';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
 	import { sourcePath } from '@/store';
-
-	const progress = tweened(0, {
-		duration: 400,
-		easing: cubicOut
-	});
 
 	export let open = false;
 
@@ -68,7 +62,6 @@
 				</div>
 			{/each}
 		</div>
-		<LinearProgress progress={$progress} />
 		<div style="width:100%;margin-top:12px;margin-bottom:12px">
 			<Button style="display:flex; justify-content:end" on:click={onConfirm}>确定</Button>
 		</div>

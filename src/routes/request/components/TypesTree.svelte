@@ -78,17 +78,17 @@
 
 	async function update_request(node?: TypesTree) {
 		if (node) {
-			await fetch(node.full_path || '');
+			await fetch(node.full_path || '', node.name);
 			check_list_modal_open = true;
 		} else {
-			await fetch($config.types_path || '');
+			await fetch($config.types_path || '', 'root.ts');
 			check_list_modal_open = true;
 		}
 	}
 
 	async function update_request_recursive(node?: TypesTree) {
 		if (node) {
-			await fetch(node.full_path || '');
+			await fetch(node.full_path || '', node.name);
 			if (node.children) {
 				for (let subNode of node.children) {
 					await update_request_recursive(subNode);
@@ -97,7 +97,7 @@
 
 			check_list_modal_open = true;
 		} else {
-			await fetch($config.types_path || '');
+			await fetch($config.types_path || '', 'root.ts');
 			for (let subNode of full_list) {
 				await update_request_recursive(subNode);
 			}
@@ -105,15 +105,16 @@
 		}
 	}
 
-	async function fetch(path: string) {
+	async function fetch(path: string, name: string) {
 		return invoke<string>('get_request_string', { sourcePath: $sourcePath, path })
 			.then((res) => {
 				over_list.push({
-					name: 'root.ts',
+					name,
 					content: res,
 					full_path: path,
 					checked: true
 				});
+				over_list = over_list
 			})
 			.catch((e) => {
 				toast.push(JSON.stringify(e), toastTheme.error);
