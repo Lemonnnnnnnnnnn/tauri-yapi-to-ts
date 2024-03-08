@@ -28,7 +28,7 @@ pub fn init_project_config(source_path: String) -> Result<(), io::Error> {
         .write(true)
         .create(true)
         .open(yapi_config_path)?;
-    file.write_all(json!(yapi_config).to_string().as_bytes())?;
+    file.write_all(serde_json::to_string(&yapi_config)?.as_bytes())?;
     Ok(())
 }
 
@@ -42,10 +42,14 @@ pub fn get_project_config(source_path: &str) -> Result<YapiConfig, io::Error> {
 }
 
 pub fn write_project_config(source_path: &str, yapi_config: YapiConfig) -> Result<(), io::Error> {
+    // why use truncate?
+    // write mean overwrite file, Overwriting doesn't mean you're overwriting the entire content of a file. Say your file has 8 As in it, then you write 3 Xs into to the buffer with the write(true) argument supplied, you have now overwritten the first 3 As, meaning your file now contains XXXAAAAA, see, your overwrote some data (example taken from here). Rust doesn't automatically truncate (remove file contents without removing the file) the file, for that you need to also call truncate(true)
     let mut file = OpenOptions::new()
         .write(true)
+        .truncate(true)
         .open(string_to_path_buf(source_path.to_string()).join(PROJECT_CONFIG_NAME))?;
-    file.write_all(json!(yapi_config).to_string().as_bytes())?;
+    file.write(serde_json::to_string(&yapi_config)?.as_bytes())?;
+
     Ok(())
 }
 

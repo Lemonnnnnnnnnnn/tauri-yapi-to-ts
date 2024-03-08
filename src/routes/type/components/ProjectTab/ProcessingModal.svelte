@@ -31,6 +31,7 @@
 			checkList = checkList;
 			log_area.scrollTop = log_area.scrollHeight;
 			progress.set(checkList.length / $processingModalTotal);
+
 		});
 	});
 
