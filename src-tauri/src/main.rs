@@ -1,22 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::sync::Arc;
-
 use models::yapi::queue::Queue;
 use services::{conversion::path_buf_to_string, global_config::init_config};
-use structs::context::ContextGlobal;
 use tauri::{api::dialog, CustomMenuItem, Manager, Menu, MenuItem, Submenu};
-use tokio::sync::Mutex;
-
-use crate::services::{
-    category::update_categories,
-    common::{execute, pause},
-    global_config::read_config,
-    interface::update_interface,
-    project::update_projects,
-    request::{check_request_config, get_request_list, update_request},
-};
 
 use crate::commands::{
     global_config::{add_project, load_global_config, load_latest_project, update_global_config},
@@ -30,7 +17,6 @@ use crate::commands::{
 pub mod commands;
 pub mod models;
 pub mod services;
-pub mod structs;
 pub mod utils;
 
 fn main() {
@@ -50,22 +36,11 @@ fn main() {
     let menu = Menu::new().add_submenu(file_menu).add_submenu(edit_menu);
 
     tauri::Builder::default()
-        .manage(ContextGlobal {
-            source_path: Arc::new(Mutex::new(None)),
-        })
         .setup(|app| {
             let app_handle = app.handle();
             init_config(&app_handle).unwrap();
 
             app.manage(Queue::new(&app_handle));
-            // if let Ok(source_path) = get_latest_project_source_path(&app_handle) {
-            //     app.emit_all("load_project", source_path).unwrap();
-            // }
-
-            // services::storage::wrtie_project(&app_handle);
-            // let main_window = app.get_window("main").unwrap();
-
-            // app.manage(Queue::new(DEAFULT_RATE_LIMIT, 0, main_window));
             Ok(())
         })
         .menu(menu)
@@ -87,42 +62,13 @@ fn main() {
                                 window.emit_all("load_project_error", e).unwrap();
                             }
                         }
-
-                        // spawn(async move {
-                        //     match read_config(
-                        //         json!(GetConfigRequest {
-                        //             dir_path: dir_path.to_str().unwrap().to_string(),
-                        //         })
-                        //         .to_string(),
-                        //         handler_clone,
-                        //     )
-                        //     .await
-                        //     {
-                        //         Ok(res) => {
-                        //             window.emit_all("init_completed", res.message).unwrap();
-                        //         }
-                        //         Err(e) => {
-                        //             window.emit_all("missing_config", e).unwrap();
-                        //         }
-                        //     }
-                        // });
                     }
                 }),
                 _ => {}
             }
         })
         .invoke_handler(tauri::generate_handler![
-            read_config,
             update_global_config,
-            // get_global_config,
-            update_categories,
-            update_interface,
-            update_projects,
-            execute,
-            pause,
-            get_request_list,
-            check_request_config,
-            update_request,
             add_project,
             load_latest_project,
             load_project_config,

@@ -1,10 +1,14 @@
-use serde_json::{json, Value};
+use serde_json::Value;
 
 use crate::models::yapi::interface::{InterfaceData, WebType};
 
-use super::common::{get_desc, get_legal_name, get_path_arr, get_request_json};
+use super::common::{get_desc, get_legal_name, get_path_arr};
 
-pub fn get_ts_string(web_type: WebType, interface_data: &InterfaceData , form_value: &Value) -> String {
+pub fn get_ts_string(
+    web_type: WebType,
+    interface_data: &InterfaceData,
+    form_value: &Value,
+) -> String {
     let header = format!("// {}", interface_data.title);
     let file_name = get_path_arr(interface_data.path.clone())
         .last()

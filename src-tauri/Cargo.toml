@@ -18,7 +18,6 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 reqwest = { version = "0.11", features = ["json", "blocking" , "socks"] }
 tokio = { version = "1.33", features = ["full"] }
-ts_bridge_derive = { path = "./ts_bridge_derive" }
 chrono = "0.4.34"
 
 [features]

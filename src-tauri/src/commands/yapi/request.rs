@@ -8,7 +8,6 @@ use crate::{
     services::{
         log::log_error,
         request::{get_file_tree, get_request_ts_string, write_request_ts_file},
-        yapi::config::get_project_config,
     },
 };
 

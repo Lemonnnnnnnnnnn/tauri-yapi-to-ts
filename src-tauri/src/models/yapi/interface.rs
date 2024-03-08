@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use tauri::AppHandle;
 
 // 接口详情
 #[derive(Debug, Deserialize, Serialize, Clone)]
