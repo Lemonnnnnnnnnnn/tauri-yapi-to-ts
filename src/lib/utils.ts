@@ -36,7 +36,7 @@ export function startTask() {
     });
 }
 
-export function loadProject(sourcePath: string) {
+export function loadConfig(sourcePath: string) {
     return invoke<SuccessResponse<Config>>('load_project_config', { sourcePath })
         .then((res) => {
             toast.push(res.message, toastTheme.success);

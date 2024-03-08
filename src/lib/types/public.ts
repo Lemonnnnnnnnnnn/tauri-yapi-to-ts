@@ -19,6 +19,7 @@ export interface GlobalConfig {
 export interface ProjectList {
     token: string
     project_id: string
+    project_name:string
     categories: CategoryType[]
 }
 

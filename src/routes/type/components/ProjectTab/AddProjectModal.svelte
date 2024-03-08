@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Dialog, { Header, Content, Title } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
-	import { startTask } from '@/utils';
+	import { loadConfig, startTask } from '@/utils';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
 	import type { Config, SuccessResponse } from '@/types/public';
@@ -81,6 +81,7 @@
 			}
 
 			startTask();
+			loadConfig($sourcePath)
 			open = false;
 		} catch (e) {
 			toast.push(JSON.stringify(e), toastTheme.error);
