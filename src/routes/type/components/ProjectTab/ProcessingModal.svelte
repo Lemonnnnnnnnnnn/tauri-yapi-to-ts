@@ -31,7 +31,6 @@
 			checkList = checkList;
 			log_area.scrollTop = log_area.scrollHeight;
 			progress.set(checkList.length / $processingModalTotal);
-
 		});
 	});
 
@@ -107,8 +106,12 @@
 			{/each}
 		</div>
 		<LinearProgress progress={$progress} />
-		<div style="width:100%;margin-top:12px;margin-bottom:12px">
-			<Button style="display:flex; justify-content:end" on:click={onConfirm}>确定</Button>
+		<div style="margin:32px 16px 0 16px;">
+		<Button
+			style="display:flex; justify-content:center;width:100%;"
+			variant="raised"
+			on:click={onConfirm}>确定</Button
+		>
 		</div>
 	</Content>
 </Dialog>
