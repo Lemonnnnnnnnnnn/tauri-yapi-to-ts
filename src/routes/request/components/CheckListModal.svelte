@@ -25,8 +25,8 @@
 		open = false;
 	}
 
-	function onConfirm() {
-		const confirmed = confirm('操作将重新生成文件，请确保本地代码已经保存！');
+	async function onConfirm() {
+		const confirmed = await confirm('操作将重新生成文件，请确保本地代码已经保存！');
 
 		if (!confirmed) return;
 
