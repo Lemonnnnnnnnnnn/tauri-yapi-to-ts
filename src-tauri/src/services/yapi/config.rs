@@ -3,7 +3,7 @@ use std::{
     io::{self, Read, Write},
 };
 
-use serde_json::{from_str, json};
+use serde_json::from_str;
 
 use crate::{
     models::yapi::{
@@ -138,4 +138,3 @@ pub fn merge_interface_to_project_config(
 
     Ok(())
 }
-

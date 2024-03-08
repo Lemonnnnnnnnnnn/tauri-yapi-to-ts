@@ -53,14 +53,16 @@
 				{
 					token,
 					sourcePath: $sourcePath,
-					projectId: project_id
+					projectId: Number(project_id)
 				}
 			);
+			let num = 0;
 
 			for await (let category of categoryList.data) {
 				if (!is_full_update) {
 					if (full_category_list.find((c) => c.id === String(category._id))) continue;
 				}
+				num++;
 				toast.push(`正在获取分类${category.name}下接口...`, toastTheme.success);
 				const interfaceList = await invoke<SuccessResponse<CategoryDataList>>(
 					'get_cat_interface_list',
@@ -82,7 +84,11 @@
 				}
 			}
 
-			startTask();
+			if (num) {
+				startTask();
+			} else {
+				toast.push('无需更新', toastTheme.success);
+			}
 		} catch (e) {
 			toast.push(JSON.stringify(e), toastTheme.error);
 		}

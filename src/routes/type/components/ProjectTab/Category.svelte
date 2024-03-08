@@ -26,13 +26,16 @@
 					catId: Number(id)
 				}
 			);
-			loadConfig($sourcePath)
+			loadConfig($sourcePath);
+
+			let num = 0;
 
 			for await (let i of interfaceList.data.list) {
 				if (!is_full_update) {
 					let oldCategory = data;
 					if (oldCategory.interfaces.find((old_i) => old_i.id === String(i._id))) continue;
 				}
+				num++;
 				await invoke('add_interface_task', {
 					data: {
 						token,
@@ -41,9 +44,11 @@
 					}
 				});
 			}
-
-			startTask();
-			
+			if (num) {
+				startTask();
+			} else {
+				toast.push(`无需更新`, toastTheme.success);
+			}
 		} catch (e) {
 			toast.push(JSON.stringify(e), toastTheme.error);
 		}

@@ -53,7 +53,11 @@
 	token={active.token}
 	projectId={active.project_id}
 />
-<AddInterfaceModal token={active.token} categories={active.categories} bind:open={openAddInterfaceModal} />
+<AddInterfaceModal
+	token={active.token}
+	categories={active.categories}
+	bind:open={openAddInterfaceModal}
+/>
 
 <div style="height:95vh; display:flex; flex-direction:column; overflow:auto">
 	<div>
@@ -71,7 +75,7 @@
 				bind:active
 			>
 				<Tab minWidth {tab}>
-					<Label>{tab.project_name}</Label>
+					<Label>{tab.project_name || tab.project_id}</Label>
 				</Tab>
 			</TabBar>
 		{/if}
