@@ -8,7 +8,7 @@ use tauri::{api::dialog, CustomMenuItem, Manager, Menu, MenuItem, Submenu};
 use crate::commands::{
     global_config::{add_project, load_global_config, load_latest_project, update_global_config},
     yapi::category::get_cat_interface_list,
-    yapi::config::{load_project_config, update_project_config},
+    yapi::config::{load_project_config, merge_project_config, update_project_config},
     yapi::interface::{
         add_interface_task, cancel_task, get_interface_detail, start_task, write_to_file,
     },
@@ -86,6 +86,7 @@ fn main() {
             get_request_string,
             write_request_to_file,
             get_interface_detail,
+            merge_project_config,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

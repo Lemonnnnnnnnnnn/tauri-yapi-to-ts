@@ -41,6 +41,15 @@ pub fn get_project_config(source_path: &str) -> Result<YapiConfig, io::Error> {
     Ok(from_str(&contents)?)
 }
 
+pub fn get_specific_project_config(source_path: &str) -> Result<YapiConfig, io::Error> {
+    let mut file = OpenOptions::new()
+        .read(true)
+        .open(string_to_path_buf(source_path.to_string()))?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    Ok(from_str(&contents)?)
+}
+
 pub fn write_project_config(source_path: &str, yapi_config: YapiConfig) -> Result<(), io::Error> {
     // why use truncate?
     // write mean overwrite file, Overwriting doesn't mean you're overwriting the entire content of a file. Say your file has 8 As in it, then you write 3 Xs into to the buffer with the write(true) argument supplied, you have now overwritten the first 3 As, meaning your file now contains XXXAAAAA, see, your overwrote some data (example taken from here). Rust doesn't automatically truncate (remove file contents without removing the file) the file, for that you need to also call truncate(true)
@@ -136,5 +145,57 @@ pub fn merge_interface_to_project_config(
 
     write_project_config(source_path, yapi_config)?;
 
+    Ok(())
+}
+
+pub fn merge_config_projects(source_path: &str, other_path: &str) -> Result<(), io::Error> {
+    let mut source_config = get_project_config(source_path)?;
+    let other_config = get_specific_project_config(other_path)?;
+
+    for o_project in other_config.project_list {
+        let is_project_exist = source_config
+            .project_list
+            .iter()
+            .any(|project| project.project_id == o_project.project_id);
+
+        if !is_project_exist {
+            source_config.project_list.push(o_project);
+        } else {
+            let source_project = source_config
+                .project_list
+                .iter_mut()
+                .find(|p| p.project_id == o_project.project_id)
+                .unwrap();
+
+            for o_category in o_project.categories {
+                let is_category_exist = source_project
+                    .categories
+                    .iter()
+                    .any(|category| category.id == o_category.id);
+
+                if !is_category_exist {
+                    source_project.categories.push(o_category);
+                } else {
+                    let source_category = source_project
+                        .categories
+                        .iter_mut()
+                        .find(|c| c.id == o_category.id)
+                        .unwrap();
+
+                    for o_interface in o_category.interfaces {
+                        let is_interface_exist = source_category
+                            .interfaces
+                            .iter()
+                            .any(|interface| interface.id == o_interface.id);
+                        if !is_interface_exist {
+                            source_category.interfaces.push(o_interface);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    write_project_config(source_path, source_config)?;
     Ok(())
 }
