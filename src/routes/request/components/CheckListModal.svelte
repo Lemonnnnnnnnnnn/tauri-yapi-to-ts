@@ -37,7 +37,7 @@
 
 		toast.push('生成成功', toastTheme.success);
 		open = false;
-		checkList = []
+		checkList = [];
 	}
 </script>
 
@@ -54,7 +54,7 @@
 	</Header>
 	<Content id="fullscreen-content">
 		<div>请勾选想要生成 ts 类型的接口：</div>
-		<div style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:12px">
+		<div style="height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:12px">
 			{#each checkList as log}
 				<div style="display:flex; gap:6px; align-items:center">
 					<Checkbox checked={log.checked} />
@@ -63,8 +63,13 @@
 				</div>
 			{/each}
 		</div>
-		<div style="width:100%;margin-top:12px;margin-bottom:12px">
-			<Button style="display:flex; justify-content:end" on:click={onConfirm}>确定</Button>
+
+		<div style="margin:32px 16px 0 16px;">
+			<Button
+				style="display:flex; justify-content:center;width:100%;"
+				variant="raised"
+				on:click={onConfirm}>确定</Button
+			>
 		</div>
 	</Content>
 </Dialog>

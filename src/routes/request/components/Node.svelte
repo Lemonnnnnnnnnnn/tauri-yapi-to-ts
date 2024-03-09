@@ -1,7 +1,11 @@
 <script lang="ts">
-	import type { TypesTree } from '@/types/public';
+	import { toastTheme } from '@/consts';
+	import { PreviewModalContent, PreviewModalOpen, sourcePath } from '@/store';
+	import type { SuccessResponse, TypesTree } from '@/types/public';
 	import { wop } from '@/utils';
 	import Tooltip, { Wrapper } from '@smui/tooltip';
+	import { invoke } from '@tauri-apps/api';
+	import { toast } from '@zerodevx/svelte-toast';
 
 	export let expanded = false;
 	export let level = 1;
@@ -14,6 +18,21 @@
 			return;
 		}
 		expanded = !expanded;
+	}
+
+	function preview(data: TypesTree) {
+		invoke<SuccessResponse<string>>('get_request_string', {
+			sourcePath: $sourcePath,
+			path: data.full_path
+		})
+			.then((res) => {
+				$PreviewModalOpen = true;
+				$PreviewModalContent = res.data;
+				toast.push(JSON.stringify(res.message), toastTheme.success);
+			})
+			.catch((e) => {
+				toast.push(JSON.stringify(e), toastTheme.error);
+			});
 	}
 </script>
 
@@ -50,6 +69,12 @@
 						alt="递归生成该文件夹下的 type 文件对应的 request"
 					/>
 					<Tooltip>递归生成该文件夹下的 type 文件对应的 request</Tooltip>
+				</Wrapper>
+			</button>
+			<button class="flex-inline items-end" style="margin-left:1em" on:click={() => preview(data)}>
+				<Wrapper>
+					<img class="icon" src="/preview.svg" alt="查看生成的代码" />
+					<Tooltip>查看生成的代码</Tooltip>
 				</Wrapper>
 			</button>
 		{/if}

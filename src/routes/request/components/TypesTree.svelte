@@ -5,7 +5,6 @@
 	import { onMount } from 'svelte';
 	import Node from './Node.svelte';
 	import Button from '@smui/button';
-	import { confirm } from '@tauri-apps/api/dialog';
 	import Textfield from '@smui/textfield';
 	import { invoke } from '@tauri-apps/api';
 	import { config, sourcePath } from '@/store';
@@ -121,6 +120,7 @@
 			});
 	}
 </script>
+
 
 <CheckListModal bind:open={check_list_modal_open} bind:checkList={over_list} />
 <main style="height:95%;display:flex ; flex-direction:column">

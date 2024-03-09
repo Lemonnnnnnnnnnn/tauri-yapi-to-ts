@@ -14,4 +14,5 @@ export let config = writable<Config>({
     file_name_template: "",
     type_import_template: "",
 })
-
+export let PreviewModalOpen = writable(false)
+export let PreviewModalContent = writable("")

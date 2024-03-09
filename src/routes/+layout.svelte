@@ -10,6 +10,7 @@
 	import { listen } from '@tauri-apps/api/event';
 	import { sourcePath } from '@/store';
 	import type { SuccessResponse } from '@/types/public';
+	import PreviewModal from '@/components/PreviewModal.svelte';
 
 	let unlistenLoadProject: () => void;
 	let unlistenLoadProjectError: () => void;
@@ -50,6 +51,7 @@
 </script>
 
 <div class="app">
+	<PreviewModal />
 	<SvelteToast options={{}} />
 	{#if existProject}
 		<Sidebar />

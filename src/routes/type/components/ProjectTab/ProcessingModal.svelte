@@ -95,7 +95,7 @@
 		<div>请勾选想要生成 ts 类型的接口：</div>
 		<div
 			bind:this={log_area}
-			style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:12px"
+			style="height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:12px"
 		>
 			{#each checkList as log}
 				<div style="display:flex; gap:6px; align-items:center">
@@ -107,11 +107,11 @@
 		</div>
 		<LinearProgress progress={$progress} />
 		<div style="margin:32px 16px 0 16px;">
-		<Button
-			style="display:flex; justify-content:center;width:100%;"
-			variant="raised"
-			on:click={onConfirm}>确定</Button
-		>
+			<Button
+				style="display:flex; justify-content:center;width:100%;"
+				variant="raised"
+				on:click={onConfirm}>确定</Button
+			>
 		</div>
 	</Content>
 </Dialog>

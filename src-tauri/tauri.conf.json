@@ -27,6 +27,11 @@
       },
       "path": {
         "all": true
+      },
+      "clipboard": {
+        "all": true,
+        "readText": true,
+        "writeText": true
       }
     },
     "bundle": {
