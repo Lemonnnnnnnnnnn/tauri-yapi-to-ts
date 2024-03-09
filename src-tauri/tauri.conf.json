@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "tauri-yapi-to-ts",
-    "version": "0.1.3"
+    "version": "0.2.0"
   },
   "tauri": {
     "allowlist": {
@@ -24,6 +24,14 @@
         "message": true,
         "open": true,
         "save": true
+      },
+      "path": {
+        "all": true
+      },
+      "clipboard": {
+        "all": true,
+        "readText": true,
+        "writeText": true
       }
     },
     "bundle": {

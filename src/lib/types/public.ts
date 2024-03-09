@@ -1,23 +1,25 @@
 export interface Config {
-    source_path?: string
     base_url?: string
-    rate_limit?: number
     types_path?: string
-    types_full_path?: string,
-    break_seconds?: number,
     project_list?: ProjectList[],
     request_path?: string,
     request_template?: string,
     header_template?: string
     file_name_template?: string
     type_import_template?: string
-    proxy?:string
+}
+
+export interface GlobalConfig {
+    proxy?: string
+    rate_limit?: number
+    break_seconds?: number
 }
 
 
 export interface ProjectList {
     token: string
     project_id: string
+    project_name:string
     categories: CategoryType[]
 }
 
@@ -30,6 +32,8 @@ export interface CategoryType {
 export interface InterfaceType {
     id: string
     name?: string
+    path?: string
+    lock?: boolean
 }
 
 export interface SuccessResponse<T> {
@@ -38,7 +42,7 @@ export interface SuccessResponse<T> {
 }
 
 export interface QueueStatus {
-    total:number;
+    total: number;
     // success:number;
     // fail:number;
 }
@@ -47,4 +51,11 @@ export interface TypesTree {
     full_path: string
     name: string
     children: TypesTree[]
+}
+
+export interface RequestString {
+    full_path: string
+    name: string
+    content: string
+    checked: boolean
 }

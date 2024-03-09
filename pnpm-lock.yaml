@@ -14,9 +14,6 @@ dependencies:
   '@smui/linear-progress':
     specifier: 7.0.0-beta.16
     version: 7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3)
-  '@smui/snackbar':
-    specifier: 7.0.0-beta.16
-    version: 7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3)
   '@smui/tab':
     specifier: 7.0.0-beta.16
     version: 7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3)
@@ -46,6 +43,9 @@ devDependencies:
   '@smui/button':
     specifier: 7.0.0-beta.16
     version: 7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3)
+  '@smui/checkbox':
+    specifier: 7.0.0-beta.16
+    version: 7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3)
   '@sveltejs/adapter-auto':
     specifier: ^2.0.0
     version: 2.1.1(@sveltejs/kit@1.30.3)
@@ -70,9 +70,6 @@ devDependencies:
   '@zerodevx/svelte-toast':
     specifier: ^0.9.5
     version: 0.9.5(svelte@4.2.8)
-  carbon-components-svelte:
-    specifier: ^0.82.0
-    version: 0.82.4
   eslint:
     specifier: ^8.28.0
     version: 8.55.0
@@ -88,6 +85,9 @@ devDependencies:
   prettier-plugin-svelte:
     specifier: ^3.1.2
     version: 3.1.2(prettier@3.1.1)(svelte@4.2.8)
+  shiki:
+    specifier: ^1.1.7
+    version: 1.1.7
   svelte:
     specifier: ^4.2.7
     version: 4.2.8
@@ -477,7 +477,6 @@ packages:
       '@material/theme': 14.0.0
       '@material/touch-target': 14.0.0
       tslib: 2.6.2
-    dev: false
 
   /@material/chips@14.0.0:
     resolution: {integrity: sha512-SfZX/Ovdq4NgjdtIr/N1O3fEHisZC+t8G8629OV/NrniSS6rKOa+q1mImzna8R4pfuYO+7nT5nZewQpL/JSYaQ==}
@@ -1048,6 +1047,10 @@ packages:
     resolution: {integrity: sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==}
     dev: true
 
+  /@shikijs/core@1.1.7:
+    resolution: {integrity: sha512-gTYLUIuD1UbZp/11qozD3fWpUTuMqPSf3svDMMrL0UmlGU7D9dPw/V1FonwAorCUJBltaaESxq90jrSjQyGixg==}
+    dev: true
+
   /@smui-extra/accordion@7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3):
     resolution: {integrity: sha512-Y0oYzhjcMjx471Bp44tDK5w2MZB7IovNIiwkkPX7Bieuuwucvt3kuiMzAGWsWx9JZINRkfYK4FtuO92CEElzFQ==}
     dependencies:
@@ -1159,7 +1162,6 @@ packages:
     transitivePeerDependencies:
       - svelte
       - typescript
-    dev: false
 
   /@smui/chips@7.0.0-beta.16(svelte@4.2.8)(typescript@5.3.3):
     resolution: {integrity: sha512-MwEsdUdUyPMzucHfMurGQ8G+EW/jZXgM3lWxL9Erul6Eua/whJuDznJEtAEGEbjjZ6HSTrfarVY274tXRcW7rg==}
@@ -2053,12 +2055,6 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /carbon-components-svelte@0.82.4:
-    resolution: {integrity: sha512-fuqMl+KNJXMlGhuwK4M11ZnGcbHF6nR7TOiiq6UJr5ALCCen4jk71sMAOurUWbOTOVe4DXM4z+Sb6/BV/Gf1Ag==}
-    dependencies:
-      flatpickr: 4.6.9
-    dev: true
-
   /chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
@@ -2430,10 +2426,6 @@ packages:
       flatted: 3.2.9
       keyv: 4.5.4
       rimraf: 3.0.2
-    dev: true
-
-  /flatpickr@4.6.9:
-    resolution: {integrity: sha512-F0azNNi8foVWKSF+8X+ZJzz8r9sE1G4hl06RyceIaLvyltKvDl6vqk9Lm/6AUUCi5HWaIjiUbk7UpeE/fOXOpw==}
     dev: true
 
   /flatted@3.2.9:
@@ -2993,6 +2985,12 @@ packages:
   /shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+    dev: true
+
+  /shiki@1.1.7:
+    resolution: {integrity: sha512-9kUTMjZtcPH3i7vHunA6EraTPpPOITYTdA5uMrvsJRexktqP0s7P3s9HVK80b4pP42FRVe03D7fT3NmJv2yYhw==}
+    dependencies:
+      '@shikijs/core': 1.1.7
     dev: true
 
   /sirv@2.0.3:
