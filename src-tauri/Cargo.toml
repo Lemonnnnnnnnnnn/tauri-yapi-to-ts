@@ -14,7 +14,7 @@ tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
 tauri = { version = "1.5", features = [ "clipboard-all", "path-all", "shell-open", "dialog-all"] }
-serde = { version = "1.0", features = ["derive"] }
+serde = { version = "1.0.197", features = ["derive"] }
 serde_json = "1.0"
 reqwest = { version = "0.11", features = ["json", "blocking" , "socks"] }
 tokio = { version = "1.33", features = ["full"] }
