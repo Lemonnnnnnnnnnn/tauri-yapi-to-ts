@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { appLogDir, appConfigDir } from '@tauri-apps/api/path';
+	import { appLogDir, appLocalDataDir } from '@tauri-apps/api/path';
 
 	let logDir = '';
 	let configDir = '';
@@ -10,7 +10,7 @@
 			logDir = res;
 		});
 
-		appConfigDir().then((res) => {
+		appLocalDataDir().then((res) => {
 			configDir = res;
 		});
 	});

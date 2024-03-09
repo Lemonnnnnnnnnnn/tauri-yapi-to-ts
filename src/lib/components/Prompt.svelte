@@ -12,13 +12,15 @@
 			directory: true,
 			multiple: false
 		}).then((res) => {
-			invoke<SuccessResponse<null>>('add_project', { sourcePath: res })
-				.then((res) => {
-					toast.push(JSON.stringify(res.message), toastTheme.success);
-				})
-				.catch((e) => {
-					toast.push(JSON.stringify(e), toastTheme.error);
-				});
+			if (res) {
+				invoke<SuccessResponse<null>>('add_project', { sourcePath: res })
+					.then((res) => {
+						toast.push(JSON.stringify(res.message), toastTheme.success);
+					})
+					.catch((e) => {
+						toast.push(JSON.stringify(e), toastTheme.error);
+					});
+			}
 		});
 	}
 </script>
