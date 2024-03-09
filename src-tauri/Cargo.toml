@@ -13,12 +13,12 @@ edition = "2021"
 tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
-tauri = { version = "1.5", features = [ "shell-open", "dialog-all"] }
-serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.5", features = [ "clipboard-all", "path-all", "shell-open", "dialog-all"] }
+serde = { version = "1.0.197", features = ["derive"] }
 serde_json = "1.0"
 reqwest = { version = "0.11", features = ["json", "blocking" , "socks"] }
 tokio = { version = "1.33", features = ["full"] }
-ts_bridge_derive = { path = "./ts_bridge_derive" }
+chrono = "0.4.34"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
