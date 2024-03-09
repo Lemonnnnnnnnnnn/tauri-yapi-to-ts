@@ -13,6 +13,7 @@ export interface GlobalConfig {
     proxy?: string
     rate_limit?: number
     break_seconds?: number
+    projects?: string[]
 }
 
 

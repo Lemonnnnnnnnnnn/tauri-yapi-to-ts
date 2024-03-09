@@ -2,14 +2,19 @@
 	import Tab, { Label } from '@smui/tab';
 	import TabBar from '@smui/tab-bar';
 	import Button from '@smui/button';
-	import type { Config } from '@/types/public';
+	import type { Config, SuccessResponse } from '@/types/public';
 	import { onMount } from 'svelte';
 	import AddProjectModal from './AddProjectModal.svelte';
 	import AddCategoryModal from './AddCategoryModal.svelte';
 	import AddInterfaceModal from './AddInterfaceModal.svelte';
 	import ProcessingModal from './ProcessingModal.svelte';
 	import Project from './Project.svelte';
-	import { config } from '@/store';
+	import { config, sourcePath } from '@/store';
+	import { open } from '@tauri-apps/api/dialog';
+	import { invoke } from '@tauri-apps/api';
+	import { toast } from '@zerodevx/svelte-toast';
+	import { toastTheme } from '@/consts';
+	import { loadConfig } from '@/utils';
 
 	export let loadProject: () => void;
 	let openAddProjectModal = false;
@@ -44,6 +49,27 @@
 			active = project_list[0];
 		}
 	});
+
+	function mergeYapiConfig() {
+		open({
+			title: '选择要合并的配置文件',
+			multiple: false
+		}).then((res) => {
+			if (res) {
+				invoke<SuccessResponse<null>>('merge_project_config', {
+					sourcePath: $sourcePath,
+					otherConfigPath: res
+				})
+					.then((res) => {
+						toast.push(JSON.stringify(res.message), toastTheme.success);
+						loadConfig($sourcePath);
+					})
+					.catch((e) => {
+						toast.push(JSON.stringify(e), toastTheme.error);
+					});
+			}
+		});
+	}
 </script>
 
 <ProcessingModal />
@@ -63,8 +89,9 @@
 	<div>
 		<div>
 			<Button on:click={() => (openAddProjectModal = true)}>添加新项目</Button>
-			<Button on:click={() => (openAddCategoryModal = true)}>在当前项目下添加新分类</Button>
-			<Button on:click={() => (openAddInterfaceModal = true)}>在当前项目下添加新接口</Button>
+			<Button on:click={() => (openAddCategoryModal = true)}>添加新分类</Button>
+			<Button on:click={() => (openAddInterfaceModal = true)}>添加新接口</Button>
+			<Button on:click={mergeYapiConfig}>合并配置文件</Button>
 		</div>
 		{#if active?.project_id}
 			<TabBar

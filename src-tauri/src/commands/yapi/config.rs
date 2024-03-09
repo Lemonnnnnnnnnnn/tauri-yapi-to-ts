@@ -4,7 +4,9 @@ use crate::{
     models::{web_response::WebResponse, yapi::config::YapiConfigRequest},
     services::{
         log::log_error,
-        yapi::config::{get_project_config, init_project_config, write_project_config},
+        yapi::config::{
+            get_project_config, init_project_config, merge_config_projects, write_project_config,
+        },
     },
 };
 
@@ -32,7 +34,10 @@ pub fn update_project_config(
 }
 
 #[tauri::command]
-pub fn load_project_config(source_path: &str, app_handle: AppHandle) -> Result<WebResponse, String> {
+pub fn load_project_config(
+    source_path: &str,
+    app_handle: AppHandle,
+) -> Result<WebResponse, String> {
     match get_project_config(source_path) {
         Ok(config) => {
             if config.base_url.is_empty() {
@@ -49,5 +54,20 @@ pub fn load_project_config(source_path: &str, app_handle: AppHandle) -> Result<W
             }
             log_error(&app_handle, format!("获取项目失败！ {}", e.to_string()))
         }
+    }
+}
+
+#[tauri::command]
+pub fn merge_project_config(
+    source_path: &str,
+    other_config_path: &str,
+    app_handle: AppHandle
+) -> Result<WebResponse, String> {
+    match merge_config_projects(source_path, other_config_path) {
+        Ok(_) => Ok(WebResponse {
+            message: String::from("合并成功！"),
+            data: None,
+        }),
+        Err(e) => log_error(&app_handle, e.to_string()),
     }
 }
