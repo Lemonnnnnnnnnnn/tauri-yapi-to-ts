@@ -17,11 +17,14 @@ export type CategoryDataList = {
 }
 
 export type InterfaceDataItem = {
-    _id: number,
-    catid: number,
-    title: string,
-    path: string,
-    project_id?: number;
+    interface_data: { 
+        _id: number,
+        catid: number,
+        title: string,
+        path: string,
+        project_id?: number;
+    },
+    ts: string
 }
 
 export type QueueLog = {

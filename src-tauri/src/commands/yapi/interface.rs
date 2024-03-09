@@ -6,7 +6,12 @@ use crate::{
         web_response::WebResponse,
         yapi::{interface::InterfaceFetchParams, queue::Queue},
     },
-    services::{log::log_error, yapi::interface::{fetch_interface_detail, write_content_to_interface_path}},
+    services::{
+        log::log_error,
+        yapi::interface::{
+            fetch_interface_detail, get_interface_ts_string, write_content_to_interface_path,
+        },
+    },
 };
 
 #[tauri::command]
@@ -67,14 +72,21 @@ pub fn write_to_file(
 }
 
 #[tauri::command]
-pub async fn get_interface_detail( app_handle: AppHandle ,data: InterfaceFetchParams) -> Result<WebResponse, String> {
-    match fetch_interface_detail(data , &app_handle).await { 
+pub async fn get_interface_detail(
+    app_handle: AppHandle,
+    data: InterfaceFetchParams,
+) -> Result<WebResponse, String> {
+    match fetch_interface_detail(data, &app_handle).await {
         Err(e) => log_error(&app_handle, e.to_string()),
-        Ok(res) => {
-            Ok(WebResponse {
-                data: Some(json!(res)),
+        Ok(res) => match get_interface_ts_string(&res) {
+            Ok(ts) => Ok(WebResponse {
+                data: Some(json!({
+                  "interface_data" : res,
+                  "ts": ts
+                })),
                 message: "获取成功".to_string(),
-            })
-        }
+            }),
+            Err(e) => log_error(&app_handle, e.to_string()),
+        },
     }
 }

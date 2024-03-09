@@ -37,7 +37,7 @@
 						interface_id: Number(form.interface_id)
 					}
 				}
-			).then((res) => res.data);
+			).then((res) => res.data.interface_data);
 
 			if (isCategoryExist(interfaceDataItem.catid, categories)) {
 				toast.push(`接口所在分类已存在`, toastTheme.success);
