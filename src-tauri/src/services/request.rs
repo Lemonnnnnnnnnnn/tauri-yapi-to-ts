@@ -129,7 +129,10 @@ fn get_type_relative_path(source_path: &str, type_path: String, path: &PathBuf) 
     let types_root_path = PathBuf::from(source_path).join(type_path);
     match path == &types_root_path {
         true => None,
-        false => Some(path.strip_prefix(&types_root_path).unwrap().to_path_buf()),
+        false => match path.strip_prefix(&types_root_path) {
+            Ok(path) => Some(path.to_path_buf()),
+            Err(_) => None,
+        },
     }
 }
 

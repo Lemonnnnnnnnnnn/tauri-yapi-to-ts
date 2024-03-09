@@ -27,6 +27,7 @@
 <Dialog
 	bind:open={$PreviewModalOpen}
 	fullscreen
+	style="z-index:99"
 	aria-labelledby="simple-title"
 	aria-describedby="simple-content"
 >

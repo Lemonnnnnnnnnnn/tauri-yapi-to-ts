@@ -8,7 +8,8 @@
 	import { invoke } from '@tauri-apps/api';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
-	import { sourcePath } from '@/store';
+	import { PreviewModalContent, PreviewModalOpen, sourcePath } from '@/store';
+	import Tooltip, { Wrapper } from '@smui/tooltip';
 
 	export let open = false;
 
@@ -39,6 +40,11 @@
 		open = false;
 		checkList = [];
 	}
+
+	function preview(content: string) {
+		$PreviewModalOpen = true;
+		$PreviewModalContent = content;
+	}
 </script>
 
 <Dialog
@@ -54,12 +60,28 @@
 	</Header>
 	<Content id="fullscreen-content">
 		<div>请勾选想要生成 ts 类型的接口：</div>
-		<div style="height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:12px">
+		<div
+			style="height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;margin-top:16px"
+		>
 			{#each checkList as log}
-				<div style="display:flex; gap:6px; align-items:center">
-					<Checkbox checked={log.checked} />
-					<span>{log.name}</span>
-					<span>{log.full_path}</span>
+				<div style="display:flex; align-items:start;justify-content:space-between">
+					<div style="display:flex; gap:6px">
+						<Checkbox checked={log.checked} />
+						<div>
+							<div style="font-weight:bold">{log.name}</div>
+							<div>{log.full_path.replaceAll('\\', '/')}</div>
+						</div>
+					</div>
+					<button
+						class="flex-inline items-end"
+						style="margin-left:1em;margin-top:8px;"
+						on:click={() => preview(log.content)}
+					>
+						<Wrapper>
+							<img class="icon" src="/preview.svg" alt="查看生成的代码" />
+							<Tooltip>查看生成的代码</Tooltip>
+						</Wrapper>
+					</button>
 				</div>
 			{/each}
 		</div>
@@ -75,4 +97,14 @@
 </Dialog>
 
 <style>
+	button {
+		background: #fff;
+		cursor: pointer;
+		border: none;
+		padding: 0;
+	}
+	.icon {
+		width: 20px;
+		height: 20px;
+	}
 </style>

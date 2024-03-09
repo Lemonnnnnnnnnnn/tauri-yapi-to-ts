@@ -80,7 +80,9 @@
 			await fetch(node.full_path || '', node.name);
 			check_list_modal_open = true;
 		} else {
-			await fetch($config.types_path || '', 'root.ts');
+			if (!isExistFileInRootPath()) return toast.push('根目录下没有类型文件');
+
+			await fetch(`${$sourcePath}/${$config.types_path}` || '', 'index');
 			check_list_modal_open = true;
 		}
 	}
@@ -90,18 +92,38 @@
 			await fetch(node.full_path || '', node.name);
 			if (node.children) {
 				for (let subNode of node.children) {
-					await update_request_recursive(subNode);
+					await recur(subNode);
 				}
 			}
 
 			check_list_modal_open = true;
 		} else {
-			await fetch($config.types_path || '', 'root.ts');
+			if (isExistFileInRootPath()) {
+				await fetch(`${$sourcePath}/${$config.types_path}` || '', 'index');
+			}
+
 			for (let subNode of full_list) {
 				await update_request_recursive(subNode);
 			}
 			check_list_modal_open = true;
 		}
+
+		async function recur(node: TypesTree) {
+			if (!node.children.length) {
+				return;
+			}
+
+			await fetch(node.full_path || '', node.name);
+			if (node.children) {
+				for (let subNode of node.children) {
+					await recur(subNode);
+				}
+			}
+		}
+	}
+
+	function isExistFileInRootPath() {
+		return !!full_list.find((type) => !type.children.length);
 	}
 
 	async function fetch(path: string, name: string) {
@@ -113,14 +135,13 @@
 					full_path: path,
 					checked: true
 				});
-				over_list = over_list
+				over_list = over_list;
 			})
 			.catch((e) => {
 				toast.push(JSON.stringify(e), toastTheme.error);
 			});
 	}
 </script>
-
 
 <CheckListModal bind:open={check_list_modal_open} bind:checkList={over_list} />
 <main style="height:95%;display:flex ; flex-direction:column">
