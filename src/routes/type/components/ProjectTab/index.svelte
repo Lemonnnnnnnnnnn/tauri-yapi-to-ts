@@ -70,6 +70,27 @@
 			}
 		});
 	}
+
+	function exportYapiConfig() {
+		open({
+			title: '选择要导出到的位置',
+			directory:true,
+			multiple: false
+		}).then((res) => {
+			if (res) {
+				invoke<SuccessResponse<null>>('export_project_config', {
+					sourcePath: $sourcePath,
+					targetPath: res
+				})
+					.then((res) => {
+						toast.push(JSON.stringify(res.message), toastTheme.success);
+					})
+					.catch((e) => {
+						toast.push(JSON.stringify(e), toastTheme.error);
+					});
+			}
+		});
+	}
 </script>
 
 <ProcessingModal />
@@ -92,6 +113,7 @@
 			<Button on:click={() => (openAddCategoryModal = true)}>添加新分类</Button>
 			<Button on:click={() => (openAddInterfaceModal = true)}>添加新接口</Button>
 			<Button on:click={mergeYapiConfig}>合并配置文件</Button>
+			<Button on:click={exportYapiConfig}>导出配置文件</Button>
 		</div>
 		{#if active?.project_id}
 			<TabBar

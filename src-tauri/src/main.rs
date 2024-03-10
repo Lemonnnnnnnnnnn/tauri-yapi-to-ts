@@ -6,9 +6,11 @@ use services::{conversion::path_buf_to_string, global_config::init_config};
 use tauri::{api::dialog, CustomMenuItem, Manager, Menu, MenuItem, Submenu};
 
 use crate::commands::{
-    global_config::{add_project, load_global_config, load_latest_project, update_global_config},
+    global_config::{update_project, load_global_config, load_latest_project, update_global_config},
     yapi::category::get_cat_interface_list,
-    yapi::config::{load_project_config, merge_project_config, update_project_config},
+    yapi::config::{
+        export_project_config, load_project_config, merge_project_config, update_project_config,
+    },
     yapi::interface::{
         add_interface_task, cancel_task, get_interface_detail, start_task, write_to_file,
     },
@@ -55,7 +57,7 @@ fn main() {
                     if let Some(source_path) = source_path {
                         let source_path = path_buf_to_string(source_path);
 
-                        match add_project(&source_path, app_handle) {
+                        match update_project(&source_path, app_handle) {
                             Ok(_) => {
                                 window.emit_all("load_project", source_path).unwrap();
                             }
@@ -70,7 +72,7 @@ fn main() {
         })
         .invoke_handler(tauri::generate_handler![
             update_global_config,
-            add_project,
+            update_project,
             load_latest_project,
             load_project_config,
             update_project_config,
@@ -87,6 +89,7 @@ fn main() {
             write_request_to_file,
             get_interface_detail,
             merge_project_config,
+            export_project_config
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

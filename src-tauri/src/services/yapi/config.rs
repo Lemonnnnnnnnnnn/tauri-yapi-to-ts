@@ -1,6 +1,7 @@
 use std::{
     fs::OpenOptions,
     io::{self, Read, Write},
+    path::PathBuf,
 };
 
 use serde_json::from_str;
@@ -197,5 +198,15 @@ pub fn merge_config_projects(source_path: &str, other_path: &str) -> Result<(), 
     }
 
     write_project_config(source_path, source_config)?;
+    Ok(())
+}
+
+pub fn export_project_config(source_path: &str, target_path: &str) -> Result<(), io::Error> {
+    let yapi_config = get_project_config(source_path)?;
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create(true)
+        .open(PathBuf::from(target_path).join(PROJECT_CONFIG_NAME))?;
+    file.write_all(serde_json::to_string(&yapi_config)?.as_bytes())?;
     Ok(())
 }

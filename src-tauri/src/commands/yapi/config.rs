@@ -5,7 +5,7 @@ use crate::{
     services::{
         log::log_error,
         yapi::config::{
-            get_project_config, init_project_config, merge_config_projects, write_project_config,
+            export_project_config as _export_project_config, get_project_config, init_project_config, merge_config_projects, write_project_config
         },
     },
 };
@@ -66,6 +66,21 @@ pub fn merge_project_config(
     match merge_config_projects(source_path, other_config_path) {
         Ok(_) => Ok(WebResponse {
             message: String::from("合并成功！"),
+            data: None,
+        }),
+        Err(e) => log_error(&app_handle, e.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn export_project_config(
+    source_path: &str,
+    app_handle: AppHandle,
+    target_path: &str
+) -> Result<WebResponse, String> {
+    match _export_project_config(source_path, target_path) {
+        Ok(_) => Ok(WebResponse {
+            message: String::from("导出成功！"),
             data: None,
         }),
         Err(e) => log_error(&app_handle, e.to_string()),

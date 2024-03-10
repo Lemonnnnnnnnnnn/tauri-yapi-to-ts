@@ -27,10 +27,14 @@
 		});
 	});
 
-	function loadProject(path: string){
-		$sourcePath = path
-		toast.push('切换项目成功', toastTheme.success);
-		goto('/type')
+	function loadProject(path: string) {
+		invoke<SuccessResponse<null>>('update_project', { sourcePath: path })
+			.then((_) => {
+				toast.push('切换项目成功', toastTheme.success);
+			})
+			.catch((e) => {
+				toast.push(JSON.stringify(e), toastTheme.error);
+			});
 	}
 </script>
 
@@ -38,16 +42,15 @@
 	<h2>本地项目列表</h2>
 	<div class="card-wrapper">
 		{#each projects as project}
-		<button on:click={()=>loadProject(project)} class="card">
-			<Wrapper>
-				<div class="card-text">{project}</div>
-				<Tooltip>{project}</Tooltip>	
-			</Wrapper>	
-		</button>
-	{/each}
-
+			<button on:click={() => loadProject(project)} class="card">
+				<Wrapper>
+					<div class="card-text">{project}</div>
+					<Tooltip>{project}</Tooltip>
+				</Wrapper>
+			</button>
+		{/each}
 	</div>
-	
+
 	<h2>配置文件地址</h2>
 	<div>日志文件夹：{logDir}</div>
 	<br />
@@ -55,12 +58,12 @@
 </div>
 
 <style>
-	.card-wrapper { 
+	.card-wrapper {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
 		gap: 16px;
 	}
-	.card { 
+	.card {
 		border: 1px solid #ccc;
 		padding: 16px;
 		margin-bottom: 16px;
@@ -69,7 +72,7 @@
 		background-color: #fff;
 	}
 
-	.card-text { 
+	.card-text {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
