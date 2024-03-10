@@ -8,7 +8,7 @@ use crate::{
     },
     services::{
         global_config::{
-            get_global_config, get_latest_project_source_path, update_project, write_config,
+            get_global_config, get_latest_project_source_path, update_project as _update_project, write_config,
         },
         log::log_error,
     },
@@ -27,10 +27,10 @@ pub fn load_global_config(app_handle: tauri::AppHandle) -> Result<WebResponse, S
 
 // 初始化
 #[tauri::command]
-pub fn add_project(source_path: &str, app_handle: AppHandle) -> Result<WebResponse, String> {
+pub fn update_project(source_path: &str, app_handle: AppHandle) -> Result<WebResponse, String> {
     match get_global_config(&app_handle) {
         Ok(mut global_config) => {
-            match update_project(&app_handle, &source_path.to_string(), &mut global_config) {
+            match _update_project(&app_handle, &source_path.to_string(), &mut global_config) {
                 Ok(_) => {
                     app_handle
                         .emit_all("load_project", source_path.to_string())

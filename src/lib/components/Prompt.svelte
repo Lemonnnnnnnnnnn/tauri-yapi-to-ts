@@ -13,7 +13,7 @@
 			multiple: false
 		}).then((res) => {
 			if (res) {
-				invoke<SuccessResponse<null>>('add_project', { sourcePath: res })
+				invoke<SuccessResponse<null>>('update_project', { sourcePath: res })
 					.then((res) => {
 						toast.push(JSON.stringify(res.message), toastTheme.success);
 					})
