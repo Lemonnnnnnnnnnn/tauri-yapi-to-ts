@@ -30,11 +30,15 @@
 				source_path: $sourcePath,
 				interface_id
 			}
-		}).then((res) => {
-			$PreviewModalOpen = true;
-			$PreviewModalContent = res.data.ts;
-			toast.push(JSON.stringify(res.message), toastTheme.success);
-		});
+		})
+			.then((res) => {
+				$PreviewModalOpen = true;
+				$PreviewModalContent = res.data.ts;
+				toast.push(JSON.stringify(res.message), toastTheme.success);
+			})
+			.catch((e) => {
+				toast.push(JSON.stringify(e), toastTheme.error);
+			});
 	}
 </script>
 
@@ -55,10 +59,7 @@
 				<Tooltip>更新接口</Tooltip>
 			</Wrapper>
 		</div>
-		<button
-			style="margin-left:1em;margin-bottom:0.2em"
-			on:click={() => preview(Number(data.id))}
-		>
+		<button style="margin-left:1em;margin-bottom:0.2em" on:click={() => preview(Number(data.id))}>
 			<Wrapper>
 				<img class="icon" src="/preview.svg" alt="查看生成的代码" />
 				<Tooltip>查看生成的代码</Tooltip>

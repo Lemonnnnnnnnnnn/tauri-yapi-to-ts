@@ -27,10 +27,14 @@
 
 	onMount(async () => {
 		unlistenLog = await listen<QueueLog>('queue_log', (event) => {
-			checkList.push({ ...event.payload.resolved_interface, checked: true });
-			checkList = checkList;
-			log_area.scrollTop = log_area.scrollHeight;
-			progress.set(checkList.length / $processingModalTotal);
+			if (event.payload.is_success) {
+				checkList.push({ ...event.payload.resolved_interface, checked: true });
+				checkList = checkList;
+				log_area.scrollTop = log_area.scrollHeight;
+				progress.set(checkList.length / $processingModalTotal);
+			} else {
+				toast.push(JSON.stringify(event.payload.msg), toastTheme.error);
+			}
 		});
 	});
 
