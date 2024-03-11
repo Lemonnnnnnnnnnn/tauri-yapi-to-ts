@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Dialog, { Title, Content, Header } from '@smui/dialog';
 	import type { RequestString } from '@/types/public';
-	import { tweened } from 'svelte/motion';
-	import { cubicOut } from 'svelte/easing';
 	import Checkbox from '@smui/checkbox';
 	import Button from '@smui/button';
 	import { invoke } from '@tauri-apps/api';
@@ -66,7 +64,7 @@
 			{#each checkList as log}
 				<div style="display:flex; align-items:start;justify-content:space-between">
 					<div style="display:flex; gap:6px">
-						<Checkbox checked={log.checked} />
+						<Checkbox bind:checked={log.checked} />
 						<div>
 							<div style="font-weight:bold">{log.name}</div>
 							<div>{log.full_path.replaceAll('\\', '/')}</div>
