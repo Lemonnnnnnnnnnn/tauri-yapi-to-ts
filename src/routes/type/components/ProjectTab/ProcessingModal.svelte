@@ -103,7 +103,7 @@
 		>
 			{#each checkList as log}
 				<div style="display:flex; gap:6px; align-items:center">
-					<Checkbox checked={log.checked} />
+					<Checkbox bind:checked={log.checked} />
 					<span>{log.interface.title}</span>
 					<span>{log.interface.path}</span>
 				</div>
