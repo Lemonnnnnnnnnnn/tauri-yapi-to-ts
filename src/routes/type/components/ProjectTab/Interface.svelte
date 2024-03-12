@@ -24,7 +24,7 @@
 
 	async function preview(interface_id: number) {
 		toast.push('正在获取接口信息...', toastTheme.success);
-		await invoke<SuccessResponse<InterfaceDataItem>>('get_interface_detail', {
+		await invoke<SuccessResponse<InterfaceDataItem & { ts: string }>>('get_interface_detail', {
 			data: {
 				token,
 				source_path: $sourcePath,

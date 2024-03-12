@@ -28,7 +28,7 @@
 
 		try {
 			toast.push('正在获取接口信息...', toastTheme.success);
-			const interfaceDataItem = await invoke<SuccessResponse<InterfaceDataItem>>(
+			const interfaceDataItem = await invoke<SuccessResponse<InterfaceDataItem & { ts: string }>>(
 				'get_interface_detail',
 				{
 					data: {
@@ -37,7 +37,7 @@
 						interface_id: Number(form.interface_id)
 					}
 				}
-			).then((res) => res.data.interface_data);
+			).then((res) => res.data);
 
 			if (isCategoryExist(interfaceDataItem.catid, categories)) {
 				toast.push(`接口所在分类已存在`, toastTheme.success);
