@@ -78,7 +78,7 @@
 						data: {
 							token,
 							source_path: $sourcePath,
-							interface_id: i.interface_data._id
+							interface_id: i._id
 						}
 					});
 				}

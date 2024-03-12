@@ -33,14 +33,16 @@
 			for await (let i of interfaceList.data.list) {
 				if (!is_full_update) {
 					let oldCategory = data;
-					if (oldCategory.interfaces.find((old_i) => old_i.id === String(i.interface_data._id))) continue;
+					if (oldCategory.interfaces.find((old_i) => old_i.id === String(i._id)))
+						continue;
 				}
 				num++;
+
 				await invoke('add_interface_task', {
 					data: {
 						token,
 						source_path: $sourcePath,
-						interface_id: i.interface_data._id
+						interface_id: i._id
 					}
 				});
 			}
@@ -50,6 +52,8 @@
 				toast.push(`无需更新`, toastTheme.success);
 			}
 		} catch (e) {
+			console.log(e);
+			
 			toast.push(JSON.stringify(e), toastTheme.error);
 		}
 	}
