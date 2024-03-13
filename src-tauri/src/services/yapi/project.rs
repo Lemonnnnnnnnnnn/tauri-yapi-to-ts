@@ -48,7 +48,11 @@ pub async fn fetch_project_cat_menu(
     app_handle: &AppHandle,
 ) -> Result<Vec<CategoryMenuItem>, io::Error> {
     let client = get_reqwest_client(&app_handle)?;
-    let project_config = get_project_config(source_path)?;
+    let mut project_config = get_project_config(source_path)?;
+
+    if !project_config.base_url.ends_with('/') {
+        project_config.base_url.push('/');
+    }
 
     let url = format!(
         "{}{}?project_id={}&token={}",
