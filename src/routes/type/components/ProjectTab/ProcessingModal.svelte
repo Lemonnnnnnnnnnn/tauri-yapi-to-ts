@@ -2,7 +2,6 @@
 	import { listen } from '@tauri-apps/api/event';
 	import Dialog, { Title, Content, Header } from '@smui/dialog';
 	import { onDestroy, onMount } from 'svelte';
-	import { processingModalOpen, processingModalTotal, sourcePath } from '../../../../lib/store';
 	import type { SuccessResponse } from '@/types/public';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
@@ -13,6 +12,14 @@
 	import Checkbox from '@smui/checkbox';
 	import Button from '@smui/button';
 	import { invoke } from '@tauri-apps/api';
+	import {
+		PreviewModalContent,
+		PreviewModalOpen,
+		processingModalOpen,
+		processingModalTotal,
+		sourcePath
+	} from '@/store';
+	import Tooltip, { Wrapper } from '@smui/tooltip';
 
 	const progress = tweened(0, {
 		duration: 400,
@@ -80,6 +87,11 @@
 		toast.push('生成成功', toastTheme.success);
 		$processingModalOpen = false;
 	}
+
+	function preview(content: string) {
+		$PreviewModalOpen = true;
+		$PreviewModalContent = content;
+	}
 </script>
 
 <Dialog
@@ -102,10 +114,22 @@
 			style="height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:12px"
 		>
 			{#each checkList as log}
-				<div style="display:flex; gap:6px; align-items:center">
-					<Checkbox bind:checked={log.checked} />
-					<span>{log.interface.title}</span>
-					<span>{log.interface.path}</span>
+				<div style="display:flex; align-items:start;justify-content:space-between">
+					<div style="display:flex; gap:6px; align-items:center">
+						<Checkbox bind:checked={log.checked} />
+						<span>{log.interface.title}</span>
+						<span>{log.interface.path}</span>
+					</div>
+					<button
+						class="flex-inline items-end"
+						style="margin-left:1em;margin-top:8px;"
+						on:click={() => preview(log.ts_string)}
+					>
+						<Wrapper>
+							<img class="icon" src="/preview.svg" alt="查看生成的代码" />
+							<Tooltip>查看生成的代码</Tooltip>
+						</Wrapper>
+					</button>
 				</div>
 			{/each}
 		</div>
@@ -121,4 +145,14 @@
 </Dialog>
 
 <style>
+	button {
+		background: #fff;
+		cursor: pointer;
+		border: none;
+		padding: 0;
+	}
+	.icon {
+		width: 20px;
+		height: 20px;
+	}
 </style>
