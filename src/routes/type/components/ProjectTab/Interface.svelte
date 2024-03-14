@@ -24,13 +24,16 @@
 
 	async function preview(interface_id: number) {
 		toast.push('正在获取接口信息...', toastTheme.success);
-		await invoke<SuccessResponse<InterfaceDataItem & { ts: string }>>('get_interface_detail', {
-			data: {
-				token,
-				source_path: $sourcePath,
-				interface_id
+		await invoke<SuccessResponse<{ interface_data: InterfaceDataItem; ts: string }>>(
+			'get_interface_detail',
+			{
+				data: {
+					token,
+					source_path: $sourcePath,
+					interface_id
+				}
 			}
-		})
+		)
 			.then((res) => {
 				$PreviewModalOpen = true;
 				$PreviewModalContent = res.data.ts;
