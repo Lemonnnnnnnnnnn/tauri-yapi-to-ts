@@ -28,16 +28,15 @@
 
 		try {
 			toast.push('正在获取接口信息...', toastTheme.success);
-			const interfaceDataItem = await invoke<SuccessResponse<InterfaceDataItem & { ts: string }>>(
-				'get_interface_detail',
-				{
-					data: {
-						token,
-						source_path: $sourcePath,
-						interface_id: Number(form.interface_id)
-					}
+			const interfaceDataItem = await invoke<
+				SuccessResponse<{ interface_data: InterfaceDataItem; ts: string }>
+			>('get_interface_detail', {
+				data: {
+					token,
+					source_path: $sourcePath,
+					interface_id: Number(form.interface_id)
 				}
-			).then((res) => res.data);
+			}).then((res) => res.data.interface_data);
 
 			if (isCategoryExist(interfaceDataItem.catid, categories)) {
 				toast.push(`接口所在分类已存在`, toastTheme.success);
