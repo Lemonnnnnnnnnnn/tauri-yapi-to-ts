@@ -1,14 +1,13 @@
 <script lang="ts">
 	import Dialog, { Header, Content, Title } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
-	import { loadConfig, startTask } from '@/utils';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
 	import type { Config, SuccessResponse } from '@/types/public';
 	import { sourcePath } from '@/store';
 	import Button, { Label } from '@smui/button';
 	import { invoke } from '@tauri-apps/api';
-	import type { CategoryDataList, CategoryMenuList, ProjectBaseInfo } from '@/types/yapi';
+	import type { ProjectBaseInfo } from '@/types/yapi';
 
 	let initForm = {
 		token: ''
@@ -48,40 +47,6 @@
 			
 			loadProject()
 
-			toast.push('正在获取项目分类...', toastTheme.success);
-			const menuList = await invoke<SuccessResponse<CategoryMenuList>>(
-				'get_yapi_project_cat_menu',
-				{
-					token: form.token,
-					sourcePath: $sourcePath,
-					projectId: baseInfo.data._id
-				}
-			);
-
-			for await (let catMenu of menuList.data) {
-				toast.push(`正在获取分类${catMenu.name}下接口...`, toastTheme.success);
-				const interfaceList = await invoke<SuccessResponse<CategoryDataList>>(
-					'get_cat_interface_list',
-					{
-						token: form.token,
-						sourcePath: $sourcePath,
-						catId: catMenu._id
-					}
-				);
-
-				for await (let i of interfaceList.data.list) {
-					await invoke('add_interface_task', {
-						data: {
-							token: form.token,
-							source_path: $sourcePath,
-							interface_id: i._id
-						}
-					});
-				}
-			}
-
-			startTask();
-			loadConfig($sourcePath)
 			open = false;
 		} catch (e) {
 			toast.push(JSON.stringify(e), toastTheme.error);
