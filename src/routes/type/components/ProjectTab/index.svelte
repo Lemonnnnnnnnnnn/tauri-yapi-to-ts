@@ -10,11 +10,6 @@
 	import ProcessingModal from './ProcessingModal.svelte';
 	import Project from './Project.svelte';
 	import { config, sourcePath } from '@/store';
-	import { open } from '@tauri-apps/api/dialog';
-	import { invoke } from '@tauri-apps/api';
-	import { toast } from '@zerodevx/svelte-toast';
-	import { toastTheme } from '@/consts';
-	import { loadConfig } from '@/utils';
 
 	export let loadProject: () => void;
 	let openAddProjectModal = false;
@@ -41,6 +36,8 @@
 	$: {
 		if (project_list?.length == 0) {
 			openAddProjectModal = true;
+		} else {
+			openAddProjectModal = false;
 		}
 	}
 
@@ -49,48 +46,6 @@
 			active = project_list[0];
 		}
 	});
-
-	function mergeYapiConfig() {
-		open({
-			title: '选择要合并的配置文件',
-			multiple: false
-		}).then((res) => {
-			if (res) {
-				invoke<SuccessResponse<null>>('merge_project_config', {
-					sourcePath: $sourcePath,
-					otherConfigPath: res
-				})
-					.then((res) => {
-						toast.push(JSON.stringify(res.message), toastTheme.success);
-						loadConfig($sourcePath);
-					})
-					.catch((e) => {
-						toast.push(JSON.stringify(e), toastTheme.error);
-					});
-			}
-		});
-	}
-
-	function exportYapiConfig() {
-		open({
-			title: '选择要导出到的位置',
-			directory:true,
-			multiple: false
-		}).then((res) => {
-			if (res) {
-				invoke<SuccessResponse<null>>('export_project_config', {
-					sourcePath: $sourcePath,
-					targetPath: res
-				})
-					.then((res) => {
-						toast.push(JSON.stringify(res.message), toastTheme.success);
-					})
-					.catch((e) => {
-						toast.push(JSON.stringify(e), toastTheme.error);
-					});
-			}
-		});
-	}
 </script>
 
 <ProcessingModal />
@@ -112,8 +67,6 @@
 			<Button on:click={() => (openAddProjectModal = true)}>添加新项目</Button>
 			<Button on:click={() => (openAddCategoryModal = true)}>添加新分类</Button>
 			<Button on:click={() => (openAddInterfaceModal = true)}>添加新接口</Button>
-			<Button on:click={mergeYapiConfig}>合并配置文件</Button>
-			<Button on:click={exportYapiConfig}>导出配置文件</Button>
 		</div>
 		{#if active?.project_id}
 			<TabBar
