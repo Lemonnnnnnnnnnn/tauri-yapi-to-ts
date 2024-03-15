@@ -22,6 +22,7 @@
 				need_init = true;
 			});
 	}
+	
 </script>
 
 {#if need_init}
