@@ -36,6 +36,8 @@
 	$: {
 		if (project_list?.length == 0) {
 			openAddProjectModal = true;
+		} else {
+			openAddProjectModal = false;
 		}
 	}
 
@@ -44,8 +46,6 @@
 			active = project_list[0];
 		}
 	});
-
-	
 </script>
 
 <ProcessingModal />
