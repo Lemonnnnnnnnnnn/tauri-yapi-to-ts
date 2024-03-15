@@ -4,11 +4,14 @@
 	import { invoke } from '@tauri-apps/api';
 	import type { GlobalConfig, SuccessResponse } from '@/types/public';
 	import Tooltip, { Wrapper } from '@smui/tooltip';
-	import { sourcePath } from '@/store';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { toastTheme } from '@/consts';
-	import { goto } from '$app/navigation';
+	import { open } from '@tauri-apps/api/dialog';
+	import { loadConfig } from '@/utils';
+	import { sourcePath } from '@/store';
+	import Button from '@smui/button';
 
+	
 	let logDir = '';
 	let configDir = '';
 	let projects: string[] = [];
@@ -36,6 +39,47 @@
 				toast.push(JSON.stringify(e), toastTheme.error);
 			});
 	}
+	function mergeYapiConfig() {
+		open({
+			title: '选择要合并的配置文件',
+			multiple: false
+		}).then((res) => {
+			if (res) {
+				invoke<SuccessResponse<null>>('merge_project_config', {
+					sourcePath: $sourcePath,
+					otherConfigPath: res
+				})
+					.then((res) => {
+						toast.push(JSON.stringify(res.message), toastTheme.success);
+						loadConfig($sourcePath);
+					})
+					.catch((e) => {
+						toast.push(JSON.stringify(e), toastTheme.error);
+					});
+			}
+		});
+	}
+
+	function exportYapiConfig() {
+		open({
+			title: '选择要导出到的位置',
+			directory:true,
+			multiple: false
+		}).then((res) => {
+			if (res) {
+				invoke<SuccessResponse<null>>('export_project_config', {
+					sourcePath: $sourcePath,
+					targetPath: res
+				})
+					.then((res) => {
+						toast.push(JSON.stringify(res.message), toastTheme.success);
+					})
+					.catch((e) => {
+						toast.push(JSON.stringify(e), toastTheme.error);
+					});
+			}
+		});
+	}
 </script>
 
 <div style="padding:16px">
@@ -51,7 +95,12 @@
 		{/each}
 	</div>
 
-	<h2>配置文件地址</h2>
+	<h2>工程配置文件</h2>
+	<Button on:click={mergeYapiConfig}>合并配置文件</Button>
+	<Button on:click={exportYapiConfig}>导出配置文件</Button>
+
+
+	<h2>全局配置文件地址</h2>
 	<div>日志文件夹：{logDir}</div>
 	<br />
 	<div>配置文件夹：{configDir}</div>
