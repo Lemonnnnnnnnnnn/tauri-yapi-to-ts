@@ -1,6 +1,5 @@
 export type ProjectBaseInfo = {
     _id: number,
-    desc: string,
     name: string
 }
 
