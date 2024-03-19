@@ -35,10 +35,12 @@
 	function filter_data() {
 		if (searchKey === '') {
 			filtered_list = full_list;
+
 			return;
 		}
 
-		filtered_list = do_filter(full_list);
+		const deepFullListClone = JSON.parse(JSON.stringify(full_list));
+		filtered_list = do_filter(deepFullListClone);
 
 		function do_filter(list: TypesTree[]) {
 			return list.filter((item) => {
