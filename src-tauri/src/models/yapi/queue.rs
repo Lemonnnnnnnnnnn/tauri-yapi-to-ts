@@ -13,6 +13,7 @@ use tokio::{sync::Semaphore, time::sleep};
 
 use crate::services::{
     global_config::get_global_config,
+    log::log,
     yapi::interface::{fetch_interface_detail, get_interface_ts_string},
 };
 
@@ -113,6 +114,7 @@ impl Queue {
                                 }
                             },
                             Err(e) => {
+                                log(&app_handle, format!("接口请求失败：{}", e.to_string()));
                                 queue_log(
                                     &app_handle,
                                     None,
