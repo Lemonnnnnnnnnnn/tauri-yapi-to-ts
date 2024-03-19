@@ -26,9 +26,17 @@
 	};
 
 	config.subscribe((value) => {
+		let oldActive = active;
 		project_list = value?.project_list || [];
 		if (project_list?.length > 0) {
-			active = project_list[0];
+			if (oldActive.project_id) {
+				const newActive = project_list.find((item) => item.project_id === oldActive.project_id);
+				if (newActive) {
+					active = newActive;
+				}
+			} else {
+				active = project_list[0];
+			}
 			active.categories = active.categories;
 		}
 	});
