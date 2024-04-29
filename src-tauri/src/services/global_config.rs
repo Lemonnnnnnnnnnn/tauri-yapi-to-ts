@@ -21,6 +21,13 @@ pub fn init_config(app_handle: &AppHandle) -> Result<(), io::Error> {
         return Ok(());
     }
 
+    let path = get_local_data_dir(app_handle).unwrap().join(CONFIG_NAME);
+
+    // create dir
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+
     let mut file = OpenOptions::new()
         .write(true)
         .create_new(true)
